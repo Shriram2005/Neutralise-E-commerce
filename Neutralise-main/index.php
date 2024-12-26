@@ -131,10 +131,9 @@ if ($result->num_rows > 0) {
                         <div class="product-info">
                             <h3 class="product-title">' . $row['name'] . '</h3>
                             <p class="product-price">₹' . $row['price'] . '</p>
-<form action="cart.php" method="POST">
-                        <input type="hidden" name="product_id" value="' . $row['id'] . '">
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                    </form>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
                         </div>
                     </div>';
             }
@@ -155,10 +154,9 @@ if ($result->num_rows > 0) {
                         <div class="product-info">
                             <h3 class="product-title">' . $row['name'] . '</h3>
                             <p class="product-price">₹' . $row['price'] . '</p>
-                            <form action="cart.php" method="POST">
-                        <input type="hidden" name="product_id" value="' . $row['id'] . '">
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                    </form>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
                         </div>
                     </div>';
             }
@@ -181,10 +179,9 @@ if ($result->num_rows > 0) {
                         <div class="product-info">
                             <h3 class="product-title">' . $row['name'] . '</h3>
                             <p class="product-price">₹' . $row['price'] . '</p>
-                            <form action="cart.php" method="POST">
-                        <input type="hidden" name="product_id" value="' . $row['id'] . '">
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                    </form>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
                         </div>
                     </div>';
             }
@@ -569,8 +566,18 @@ $con->close();
     <!-- Footer --------------------------------------->
 <?php include('footer.php');?>
 
+    <!-- Add to Cart Modal -->
+    <div id="add-to-cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <p id="modal-message">Product added to cart!</p>
+            <button class="modal-ok-btn" onclick="closeModal()">Okay</button>
+            <button class="modal-go-to-cart-btn" onclick="goToCart()">Go to Cart</button>
+        </div>
+    </div>
+
+    <script src="./js/cart.js"></script>
     <script src="./js/script.js" defer></script>
-    <script src="./js/product-view.js" defer></script>
 </body>
 
 </html>

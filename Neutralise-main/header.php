@@ -4,6 +4,65 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 
+<style>
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    z-index: 1000;
+    top: 100%;
+    left: 0;
+}
+
+.nav-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #f8f9fa;
+    color: var(--green-bg-color);
+}
+
+.nav-dropdown .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@media (max-width: 768px) {
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background-color: #f8f9fa;
+        margin-left: 1rem;
+    }
+    
+    .nav-dropdown:hover .dropdown-content {
+        display: none;
+    }
+    
+    .nav-dropdown.active .dropdown-content {
+        display: block;
+    }
+}
+</style>
+
    <!-------- Navbar --------->
     <header>
       <nav>
@@ -16,7 +75,14 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="menu">
             <a href="./index.php">Home</a>
             <a href="./Appointment.php">Book an Appointment</a>
-            <a href="./shop.php">Shop</a>
+            <li class="nav-dropdown">
+                <a href="#" class="nav-link">Shop <i class="fas fa-chevron-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="shop.php">All Products</a>
+                    <a href="cart.php">Shopping Cart</a>
+                    <a href="orders.php">My Orders</a>
+                </div>
+            </li>
     
             <!-- About Us Dropdown Menu -->
             <div class="about-dropdown">
@@ -94,3 +160,29 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <div class="black-effect" onclick="removeBlack()"></div>
 </header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.nav-links');
+    const navLinks = document.querySelectorAll('.nav-links li');
+
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('nav-active');
+        burger.classList.toggle('toggle');
+    });
+
+    // Mobile dropdown toggle
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('.nav-link');
+        link.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+    });
+});
+</script>

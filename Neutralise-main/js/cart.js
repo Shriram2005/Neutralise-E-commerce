@@ -1,52 +1,113 @@
 // js/cart.js
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function addToCart(id, name, price, image) {
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({ id: id, name, price: parseFloat(price), quantity: 1, image });
+function addToCart(id, name, price, image, size = null) {
+    // Create form data
+    const formData = new FormData();
+    formData.append('product_id', id);
+    formData.append('quantity', document.getElementById('product-quantity')?.value || 1);
+    if (size) {
+        formData.append('size_option', size);
     }
-    updateCart();
-    updateCartIcon();
-    showModal(`${name} has been added to your cart.`);
-}
 
-function updateCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartIcon();
+    // Show loading state
+    showModal('Adding to cart...');
+
+    // Send AJAX request
+    fetch('cart_actions.php?action=add', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            updateCartIcon();
+            showModal(`${name} has been added to your cart.`);
+        } else {
+            showModal(data.message || 'Error adding item to cart. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showModal('Error adding item to cart. Please check your connection and try again.');
+    });
 }
 
 function updateCartIcon() {
-    const cartIcon = document.querySelector('.cart-icon');
-    if (cartIcon) {
-        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
-        cartIcon.setAttribute('data-count', itemCount);
-        cartIcon.style.display = itemCount > 0 ? 'inline-block' : 'none';
-    }
+    fetch('cart_actions.php?action=count')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.setAttribute('data-count', data.count || 0);
+            cartIcon.style.display = (data.count > 0) ? 'inline-block' : 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error updating cart icon:', error);
+    });
 }
 
 function removeFromCart(id) {
-    console.log("Removing product ID:", id); // Debugging
-
-    // Remove the item from the cart
-    cart = cart.filter(item => item.id !== id);
-
-    // Update localStorage and refresh UI
-    updateCart();
-
-    console.log("Cart after removal:", cart); // Debugging
-    console.log("Updated cart in localStorage:", JSON.parse(localStorage.getItem('cart'))); // Debugging
-
-    displayCart();
+    showModal('Removing item...');
+    fetch(`cart_actions.php?action=remove&product_id=${id}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            displayCart();
+            updateCartIcon();
+            showModal('Item removed from cart.');
+        } else {
+            showModal(data.message || 'Error removing item from cart.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showModal('Error removing item. Please try again.');
+    });
 }
 
+function updateQuantity(id, change) {
+    const formData = new FormData();
+    formData.append('product_id', id);
+    formData.append('change', change);
 
-function clearCart() {
-    cart = [];
-    updateCart();
-    displayCart();
+    fetch('cart_actions.php?action=update_quantity', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            displayCart();
+            updateCartIcon();
+        } else {
+            showModal(data.message || 'Error updating quantity.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showModal('Error updating quantity. Please try again.');
+    });
 }
 
 function displayCart() {
@@ -56,66 +117,72 @@ function displayCart() {
 
     if (!cartItemsContainer) return;
 
-    cartItemsContainer.innerHTML = ''; // Clear current items
-    let subtotal = 0;
+    fetch('cart_actions.php?action=get')
+    .then(response => response.json())
+    .then(data => {
+        cartItemsContainer.innerHTML = '';
+        let subtotal = 0;
 
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-        if (subtotalElement) subtotalElement.textContent = '₹0.00';
-        if (totalElement) totalElement.textContent = '₹0.00';
-        return;
-    }
+        if (data.items.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            if (subtotalElement) subtotalElement.textContent = '₹0.00';
+            if (totalElement) totalElement.textContent = '₹0.00';
+            return;
+        }
 
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
+        data.items.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
 
-        cartItemsContainer.innerHTML += `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3 class="cart-item-title">${item.name}</h3>
-                    <p class="cart-item-price">₹${item.price.toFixed(2)}</p>
-                    <div class="cart-item-quantity">
-                        <button onclick="updateQuantity('${item.id}', -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="updateQuantity('${item.id}', 1)">+</button>
+            cartItemsContainer.innerHTML += `
+                <div class="cart-item">
+                    <img src="contents/products/${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">${item.name}</h3>
+                        <p class="cart-item-price">���${parseFloat(item.price).toFixed(2)}</p>
+                        ${item.size_option ? `<p class="cart-item-size">Size: ${item.size_option}</p>` : ''}
+                        <div class="cart-item-quantity">
+                            <button onclick="updateQuantity('${item.product_id}', -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.product_id}', 1)">+</button>
+                        </div>
                     </div>
+                    <p class="cart-item-total">₹${itemTotal.toFixed(2)}</p>
+                    <button onclick="removeFromCart('${item.product_id}')">Remove</button>
                 </div>
-                <p class="cart-item-total">₹${itemTotal.toFixed(2)}</p>
-                <button onclick="removeFromCart('${item.id}')">Remove</button>
-            </div>
-        `;
-    });
+            `;
+        });
 
-    if (subtotalElement) subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
-    if (totalElement) totalElement.textContent = `₹${subtotal.toFixed(2)}`;
+        if (subtotalElement) subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+        if (totalElement) totalElement.textContent = `₹${subtotal.toFixed(2)}`;
+    });
 }
 
-
-function updateQuantity(id, change) {
-    const item = cart.find(item => item.id === id);
-    if (item) {
-        item.quantity += change;
-        if (item.quantity < 1) {
-            removeFromCart(id);
-        } else {
-            updateCart();
+function clearCart() {
+    fetch('cart_actions.php?action=clear')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
             displayCart();
+            updateCartIcon();
         }
-    }
+    });
 }
 
 function showModal(message) {
     const modal = document.getElementById('add-to-cart-modal');
     const modalMessage = document.getElementById('modal-message');
-    modalMessage.textContent = message;
-    modal.style.display = 'block';
+    if (modal && modalMessage) {
+        modalMessage.textContent = message;
+        modal.style.display = 'block';
+    }
 }
 
 function closeModal() {
     const modal = document.getElementById('add-to-cart-modal');
-    modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 function goToCart() {

@@ -29,7 +29,7 @@ include('connection.php');
 
 // Get the selected category, price range, and tag from URL or form (if any)
 $selected_category = isset($_GET['category']) ? mysqli_real_escape_string($con, $_GET['category']) : '';
-$selected_price_min = isset($_GET['price_min']) ? (float)$_GET['price_min'] : 400;
+$selected_price_min = isset($_GET['price_min']) ? (float)$_GET['price_min'] : 0;
 $selected_price_max = isset($_GET['price_max']) ? (float)$_GET['price_max'] : 15000;
 $selected_tag = isset($_GET['tag']) ? mysqli_real_escape_string($con, $_GET['tag']) : '';
 
@@ -149,10 +149,11 @@ while ($row = $tags_result->fetch_assoc()) {
         <h2>Price</h2>
         <div class="shop-filter-group">
             <div class="price-slider-container">
-                <input type="range" min="400" max="15000" value="<?php echo $selected_price_min; ?>" class="shop-price-slider" id="priceSlider">
+                <input type="range" min="0" max="15000" value="<?php echo $selected_price_min; ?>" class="shop-price-slider" id="priceSlider">
                 <div class="price-range">
-                    <span>₹400</span>
-                    <span>₹15,000</span>
+                    <span id="selectedMinPrice">₹<?php echo number_format($selected_price_min, 2); ?></span>
+                    <span class="price-separator">to</span>
+                    <span id="selectedMaxPrice">₹<?php echo number_format($selected_price_max, 2); ?></span>
                 </div>
             </div>
             <button class="shop-apply-filter-btn" onclick="applyPriceFilter()">Filter</button>
@@ -171,64 +172,238 @@ while ($row = $tags_result->fetch_assoc()) {
     </div>
 </div>
 
-<script>
-    function applyPriceFilter() {
-        var priceMin = document.getElementById('priceSlider').value;
-        var priceMax = 15000; // You can make this dynamic if necessary
-        window.location.href = '?category=' + '<?php echo $selected_category; ?>' + '&price_min=' + priceMin + '&price_max=' + priceMax;
+<!-- Floating Go to Cart Button -->
+<div class="floating-cart-btn" onclick="goToCart()">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Go to Cart</span>
+    <span class="cart-count" id="floatingCartCount">0</span>
+</div>
+
+<style>
+.price-slider-container {
+    padding: 5px 0;
+    width: 100%;
+}
+
+.price-range {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.price-range span {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.price-separator {
+    min-width: auto !important;
+    padding: 0 5px;
+}
+
+.shop-price-slider {
+    width: 100%;
+    margin: 5px 0;
+    height: 4px;
+    -webkit-appearance: none;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+}
+
+.shop-price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: var(--green-bg-color);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.shop-price-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: var(--green-bg-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.shop-apply-filter-btn {
+    margin-top: 10px;
+    padding: 5px 15px;
+    background: var(--green-bg-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.shop-apply-filter-btn:hover {
+    background: var(--hover-color);
+}
+
+@media (max-width: 768px) {
+    .price-range {
+        font-size: 0.8rem;
     }
+    
+    .price-range span {
+        min-width: 50px;
+    }
+    
+    .shop-price-slider {
+        height: 3px;
+    }
+    
+    .shop-price-slider::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .shop-price-slider::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .price-slider-container {
+        padding: 3px 0;
+    }
+    
+    .price-range {
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .shop-apply-filter-btn {
+        width: 100%;
+        padding: 8px;
+    }
+}
+
+/* Floating Cart Button Styles */
+.floating-cart-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--green-bg-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.floating-cart-btn:hover {
+    background: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.floating-cart-btn i {
+    font-size: 1.2rem;
+}
+
+.cart-count {
+    background: white;
+    color: var(--green-bg-color);
+    padding: 2px 8px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .floating-cart-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 15px;
+    }
+    
+    .floating-cart-btn span:not(.cart-count) {
+        display: none; /* Hide "Go to Cart" text on mobile */
+    }
+    
+    .cart-count {
+        padding: 2px 6px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Price slider functionality
+    const priceSlider = document.getElementById('priceSlider');
+    const selectedMinPrice = document.getElementById('selectedMinPrice');
+    const selectedMaxPrice = document.getElementById('selectedMaxPrice');
+
+    // Update price display when slider moves
+    priceSlider.addEventListener('input', function() {
+        selectedMinPrice.textContent = '₹' + parseFloat(this.value).toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    });
+
+    // Update floating cart count
+    function updateFloatingCartCount() {
+        fetch('cart_actions.php?action=count')
+        .then(response => response.json())
+        .then(data => {
+            const cartCount = document.getElementById('floatingCartCount');
+            if (cartCount) {
+                cartCount.textContent = data.count || 0;
+            }
+        })
+        .catch(error => console.error('Error updating cart count:', error));
+    }
+    
+    // Initial cart count update
+    updateFloatingCartCount();
+    
+    // Update cart count every time a product is added
+    const addToCartButtons = document.querySelectorAll('.shop-add-to-cart-btn');
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            setTimeout(updateFloatingCartCount, 1000); // Update after add to cart action
+        });
+    });
+
+    // Buy Now button functionality
+    const buyNowButtons = document.querySelectorAll('.shop-buy-now-btn');
+    buyNowButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.getAttribute('data-product-id');
+            window.location.href = `product-view.php?id=${productId}`;
+        });
+    });
+});
+
+function applyPriceFilter() {
+    var priceMin = document.getElementById('priceSlider').value;
+    var priceMax = 15000; // You can make this dynamic if necessary
+    window.location.href = '?category=' + '<?php echo $selected_category; ?>' + '&price_min=' + priceMin + '&price_max=' + priceMax;
+}
 </script>
 
-<?php $con->close(); ?>
-
-
-
-
-   <?php include('footer.php');?>
-
-
-    <!-- Add to Cart Modal -->
-    <div id="add-to-cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <p id="modal-message">Product added to cart!</p>
-            <button class="modal-ok-btn" onclick="closeModal()">Okay</button>
-            <button class="modal-go-to-cart-btn" onclick="goToCart()">Go to Cart</button>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const buyNowButtons = document.querySelectorAll('.shop-buy-now-btn');
-
-            buyNowButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const productId = this.getAttribute('data-product-id');
-                    window.location.href = `product-view.php?id=${productId}`;
-                });
-            });
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const buyNowButtons = document.querySelectorAll('.shop-buy-now-btn');
-            buyNowButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const productId = this.getAttribute('data-product-id');
-                    window.location.href = `product-view.php?id=${productId}`;
-                });
-            });
-        });
-
-
-    </script>
-
-
-
-    <script src="./js/cart.js"></script>
-    <script src="./js/script.js" defer></script>
+<script src="./js/cart.js"></script>
+<script src="./js/script.js" defer></script>
 </body>
-
 </html>

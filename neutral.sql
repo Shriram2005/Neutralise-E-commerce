@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 24, 2024 at 05:12 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Dec 26, 2024 at 12:37 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -90,15 +90,17 @@ CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `quantity` int(11) DEFAULT 1
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `size_option` varchar(50) DEFAULT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cart`
 --
 
-INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`) VALUES
-(2, 1, 4, 5);
+INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`, `size_option`, `added_at`) VALUES
+(3, 0, 2, 1, NULL, '2024-12-26 11:13:31');
 
 -- --------------------------------------------------------
 
@@ -135,21 +137,27 @@ INSERT INTO `contact_form` (`id`, `name`, `email`, `phone`, `subject`, `message`
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `order_date` datetime DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) NOT NULL,
-  `payment_status` varchar(50) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `shipping_address` text NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `payment_method` enum('Cash on Delivery') DEFAULT 'Cash on Delivery',
+  `order_status` enum('Pending','Processing','Shipped','Delivered','Cancelled') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `orders`
+-- Table structure for table `order_items`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `total_amount`, `payment_method`, `payment_status`, `order_date`) VALUES
-(1, 1, 0.00, 'Paytm', 'Successful', '2024-12-21 08:35:18'),
-(2, 1, 6000.00, 'Paytm', 'Successful', '2024-12-21 09:57:45'),
-(3, 1, 6000.00, 'Paytm', 'Successful', '2024-12-23 05:39:26'),
-(4, 1, 6000.00, 'Google Pay', 'Successful', '2024-12-23 05:47:40');
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -224,7 +232,9 @@ CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `image1` varchar(255) NOT NULL,
+  `image2` varchar(255) NOT NULL,
+  `image3` varchar(255) NOT NULL,
   `category` varchar(50) NOT NULL,
   `tags` varchar(255) DEFAULT NULL,
   `sku` varchar(255) DEFAULT NULL,
@@ -241,28 +251,9 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `image`, `category`, `tags`, `sku`, `rating`, `reviews_count`, `description`, `full_description`, `size_options`, `ingredients`, `usage_instructions`) VALUES
-(1, 'Tulsi Wheat Grass Body Soap', 1000.00, 'Tulsi-Wheat-Grass-Soap.JPG', 'Body', 'Avocado facewash', 'NH001', NULL, NULL, NULL, NULL, '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', NULL, NULL),
-(2, 'Wheat Grass Hair Shampoo', 1000.00, 'Wheat-Grass-Hair-Shampoo.JPG', 'Hair', 'hair cleanser', 'NH002', NULL, NULL, NULL, NULL, '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', NULL, NULL),
-(3, 'Avocado WheatGrass FaceWash', 1000.00, 'Avocado-Wheat-Grass-Facewash.JPG', 'Face', 'facewash', 'NH003', NULL, NULL, NULL, NULL, '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', NULL, NULL),
-(4, 'Wheat Grass Moisturiser Cream', 1200.00, 'Wheat-Grass-Moisturiser.JPG', 'Skin', 'Neutralise Naturals Combo body kit', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(5, 'Papaya Body Soap', 3000.00, 'Papaya-Soap.JPG', 'Body', 'herbal soap', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(6, 'Wheat Grass Powder', 2300.00, 'Wheat-Grass-Powder.JPG', 'Body', 'Best wheatgrass powder', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(7, 'Wheat Grass Soap', 1300.00, 'Wheat-Grass-Soap.JPG', 'Skin', 'herbal soaps', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(8, 'Total Skin Combo', 800.00, 'Total-Skin-Combo.JPG', 'Skin', 'Basic Skin Kit', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(9, 'All In One Combo', 900.00, 'All-In-One-Combo.JPG', 'Body', 'Neutralise Naturals Combo body kit', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(10, 'Darkspots Combo', 1000.00, 'Darkspots-Combo.JPG', 'Face', 'dark spots', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(11, 'Avocado', 1300.00, 'Avocado-Wheat-Grass-Facewash.JPG', 'Face', 'herbal facewash', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(12, 'Darma', 2500.00, 'Darkspots-Combo.JPG', 'Face', 'dark spots/pigmentation combo', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(13, 'Face Soap', 5000.00, 'Papaya-Soap.JPG', 'Face', 'herbal soaps combo', '', NULL, NULL, NULL, NULL, '', NULL, NULL),
-(14, 'Tulsi Wheat Grass Body Soap', 1000.00, 'Tulsi-Wheat-Grass-Soap.jpg', 'Health & Beauty', 'soap, organic, skin care', '', 4.5, 2, 'A powerful, all-natural cream designed to soothe and heal various skin conditions.', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', 'Organic Aloe Vera, Shea Butter, Coconut Oil, Vitamin E, Lavender Essential Oil', 'Cleanse the affected area thoroughly\nApply a small amount of cream to the skin\nGently massage until fully absorbed\nUse twice daily or as recommended by your healthcare professional'),
-(15, 'Wheat Grass Hair Shampoo', 3500.00, 'Wheat-Grass-Hair-Shampoo.jpg', 'Hair Care', 'shampoo, organic, hair care', '', 4.0, 2, 'A rejuvenating serum that hydrates and revitalizes your skin.', 'Our Organic Face Serum is formulated with natural ingredients to provide deep hydration and rejuvenation. It helps to reduce fine lines and improve skin texture.', '', 'Hyaluronic Acid, Vitamin C, Green Tea Extract, Jojoba Oil, Rosehip Oil', 'Cleanse your face thoroughly\nApply a few drops of serum to your face and neck\nGently massage until fully absorbed\nUse daily for best results'),
-(16, 'Tulsi Wheat Grass Body Soap', 3000.00, './contents/products/Tulsi-Wheat-Grass-Soap.jpg', 'Body Care', 'Natural, Organic, Healing', '', 4.5, 25, 'A powerful, all-natural cream designed to soothe and heal various skin conditions.', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '', 'Organic Aloe Vera, Shea Butter, Coconut Oil, Vitamin E, Lavender Essential Oil', 'Cleanse the affected area thoroughly\nApply a small amount of cream to the skin\nGently massage until fully absorbed\nUse twice daily or as recommended by your healthcare professional'),
-(17, 'Tulsi Wheat Grass Body Soap', 2700.00, 'Tulsi-Wheat-Grass-Soap.jpg', 'Body Care', 'Natural, Organic, Healing', '', 4.5, 25, 'A powerful, all-natural cream designed to soothe and heal various skin conditions.', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '', 'Organic Aloe Vera, Shea Butter, Coconut Oil, Vitamin E, Lavender Essential Oil', 'Cleanse the affected area thoroughly\nApply a small amount of cream to the skin\nGently massage until fully absorbed\nUse twice daily or as recommended by your healthcare professional'),
-(18, 'Wheat Grass Hair Shampoo', 2800.00, 'Wheat-Grass-Hair-Shampoo.jpg', 'Hair Care', 'Natural, Organic, Hydrating', '', 4.7, 30, 'A rejuvenating serum that hydrates and revitalizes your skin.', 'Our Organic Face Serum is formulated with natural ingredients to provide deep hydration and rejuvenation. It helps to reduce fine lines and improve skin texture.', '', 'Hyaluronic Acid, Vitamin C, Green Tea Extract, Jojoba Oil, Rosehip Oil', 'Cleanse your face thoroughly\nApply a few drops of serum to your face and neck\nGently massage until fully absorbed\nUse daily for best results'),
-(19, 'Tulsi Wheat Grass Body Soap', 5800.00, './contents/products/Tulsi-Wheat-Grass-Soap.jpg', 'Skin', 'Natural', '', 4.0, 20, 'A powerful, all-natural cream designed to soothe and heal various skin conditions.', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '', 'Organic Aloe Vera, Shea Butter, Coconut Oil, Vitamin E, Lavender Essential Oil', 'Cleanse the affected area thoroughly\nApply a small amount of cream to the skin\nGently massage until fully absorbed\nUse twice daily or as recommended by your healthcare professional'),
-(20, 'Wheat-Grass', 9000.00, 'Wheat-Grass-Powder.JPG', 'Bath', 'Powder', '', 4.0, 3, 'Cleanse the affected area thoroughly\r\nApply a small amount of cream to the skin\r\nGently massage until fully absorbed\r\nUse twice daily or as recommended by your healthcare professional', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', 'Hyaluronic Acid, Vitamin C, Green Tea Extract, Jojoba Oil, Rosehip Oil', 'Cleanse the affected area thoroughly\r\nApply a small amount of cream to the skin\r\nGently massage until fully absorbed\r\nUse twice daily or as recommended by your healthcare professional'),
-(22, 'Combo', 1000.00, 'All-In-One-Combo.JPG', 'Bath', 'natural', 'NH020', 3.0, 2, 'A powerful, all-natural cream designed to soothe and heal various skin conditions.', 'Our Natural Healing Cream is crafted with care using only the finest organic ingredients. It deeply moisturizes your skin, providing relief from various skin conditions and promoting overall skin health.', '{\"100g\": 1000, \"250g\": 1500, \"500g\": 2000}', 'Organic Aloe Vera, Shea Butter, Coconut Oil, Vitamin E, Lavender Essential Oil', 'Cleanse your face thoroughly\r\nApply a few drops of serum to your face and neck\r\nGently massage until fully absorbed\r\nUse daily for best results');
+INSERT INTO `products` (`id`, `name`, `price`, `image1`, `image2`, `image3`, `category`, `tags`, `sku`, `rating`, `reviews_count`, `description`, `full_description`, `size_options`, `ingredients`, `usage_instructions`) VALUES
+(1, 'product 1', 1001.00, 'freepik__candid-image-photography-natural-textures-highly-r__56373.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56376.jpeg', 'demo', 'a,b,cc,dd,ccc', 'demo1', NULL, NULL, 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', '{\"one\":\"100ml\",\"two \":\"200gm\"}', 'aloo butter', 'dont eat , just apply'),
+(2, 'product 2', 800.00, 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56375.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'sdaf', 'asf', 'asdf', NULL, NULL, 'asdfafa', 'asdfasdf', '{\"asdf\":\"200ml\",\"fhhffh\":\"230gm\"}', 'sdfasdfafdasdf', 'asfasdfasdfasdf');
 
 -- --------------------------------------------------------
 
@@ -368,8 +359,7 @@ CREATE TABLE `register` (
 --
 
 INSERT INTO `register` (`id`, `full_name`, `email`, `phone`, `address`, `password`, `created_at`) VALUES
-(1, 'Diksha Sonawane', 'sonawanediksha14@gmail.com', '9412356789', 'Nashik', '$2y$10$9AKg3JJxRzr9Ed70QYl7sOuxNo6T4EPgZ4mrLl9A27SK8OK6xVPDa', '2024-12-20 07:26:52'),
-(2, 'Shweta', 'gadakhshweta17@gmail.com', '9876543210', 'Pathardi Phata', '$2y$10$5YuIouN5teWhifYVvF5sFO3liz0FfEBWLZIT5J9cMmYiVAeLYnJq2', '2024-12-20 07:29:06');
+(0, 'Shriram mange', 'shrirammange1@gmail.com', '7821851927', 'nashik', '$2y$10$cOcmWHMyoKTSds99QF6rtu2Z5BFAGikIz4q85f3YOF75bqkYNRJEG', '2024-12-25 12:05:29');
 
 -- --------------------------------------------------------
 
@@ -395,13 +385,16 @@ INSERT INTO `testimonials` (`id`, `name`, `date`, `message`, `rating`, `imgSrc`)
 (2, 'Rajesh Patel', '2023-07-03', 'Being someone with very sensitive skin, I was scared to try new products. ', '★★★★★', '/contents/testimonials/users.png'),
 (3, 'Anita Desai', '2023-08-20', 'The holistic approach of Neutralise Naturals has totally transformed my skin health. ', '★★★★★', '/contents/testimonials/users.png'),
 (4, 'Vikram Singh', '2023-09-05', 'I was very doubtful at first, but after using Neutralise Naturals for 3 months, I\'m a true believer now. My psoriasis patches have reduced so much, and my skin feels so much more comfortable. Dhanyavaad, Neutralise Naturals!', '3', '/contents/testimonials/users.png'),
-(7, 'Pratiksha Sunil Sonawane', '2024-12-04', 'The Ayurvedic-inspired products from Neutralise Naturals match perfectly with my belief in natural healing. Not only has my skin improved, but  feeling more balanced overall. It like a spa day for my skin every day!', '4', 'users.png'),
+(7, 'Pratiksha Sunil Sonawane', '2024-12-06', 'The Ayurvedic-inspired products from Neutralise Naturals match perfectly with my belief in natural healing. Not only has my skin improved, but  feeling more balanced overall. It like a spa day for my skin every day!', '4', 'users.png'),
 (10, 'shweta', '2024-12-03', 'jgsghsjfghdyfrtsugggggggggggfyrrrrrrrrrrrrrrrrrrrrrrrrrrr', '4', 'users.png'),
 (11, 'Pratiksha Sunil Sonawane', '2024-12-03', 'dsfgvhjuiytresdzxgvbhjuytfrdfxgvh', '3', 'users.png'),
 (12, 'Diksha', '2024-12-10', 'hgggggggggggggggggggv', '3', 'users.png'),
-(13, 'Darshan', '2024-12-04', 'Hello it is very useful product\r\nthat can be used for daily purpose', '3', 'DarkSpot.jpeg'),
+(13, 'Darshan', '2024-12-04', 'Hello it is very useful product\nthat can be used for daily purpose', '3', 'DarkSpot.jpeg'),
 (14, 'Darshan', '2024-12-23', 'efgsefgsyufvshdfsgfusgfzbkd\r\nsbgkusjdfjdbkz.z/odilghkbdkfjbd\r\nndgjkbdkgmjxbvjmnfd fmn', '4', 'users.png'),
-(15, 'Sneha', '2024-12-12', 'jsefgsjGFjgsfydhcvfrsdhygffffuygfdhvyregfdhnvhergdvhbcxhvfdhfgxvcbdnxfvmdsfg,dujgfbvfdnvcxhnbdjghksrghsrjgbd vc', '2', 'users.png');
+(15, 'Sneha', '2024-12-12', 'jsefgsjGFjgsfydhcvfrsdhygffffuygfdhvyregfdhnvhergdvhbcxhvfdhfgxvcbdnxfvmdsfg,dujgfbvfdnvcxhnbdjghksrghsrjgbd vc', '2', 'users.png'),
+(16, 'TechEntrance', '2024-12-13', 'Noiceeee Products!!!!!!!!!!!', '5', 'favicon.png'),
+(27, 'android', '2024-12-27', 'great product from neutralise', '5', 'freepik__candid-image-photography-natural-textures-highly-r__56372.jpeg'),
+(28, 'adfasdf', '2024-12-21', 'asdfasdfasf', '5', 'freepik__candid-image-photography-natural-textures-highly-r__56373.jpeg');
 
 --
 -- Indexes for dumped tables
@@ -439,6 +432,14 @@ ALTER TABLE `contact_form`
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `our_approach`
@@ -509,7 +510,7 @@ ALTER TABLE `blogs`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `contact_form`
@@ -521,55 +522,25 @@ ALTER TABLE `contact_form`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `our_approach`
+-- AUTO_INCREMENT for table `order_items`
 --
-ALTER TABLE `our_approach`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `our_promise`
---
-ALTER TABLE `our_promise`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `our_story`
---
-ALTER TABLE `our_story`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-
---
--- AUTO_INCREMENT for table `product_page`
---
-ALTER TABLE `product_page`
-  MODIFY `Id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `psoriasis_data`
---
-ALTER TABLE `psoriasis_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT for table `register`
---
-ALTER TABLE `register`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `testimonials`
 --
 ALTER TABLE `testimonials`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
@@ -579,14 +550,21 @@ ALTER TABLE `testimonials`
 -- Constraints for table `cart`
 --
 ALTER TABLE `cart`
-  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`),
-  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`);
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

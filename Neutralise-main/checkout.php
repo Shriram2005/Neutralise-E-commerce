@@ -1,92 +1,75 @@
 <?php
-session_start(); // Start session to check user login status
+session_start();
 
-// Check if the user is logged in
-// if (!isset($_SESSION['user_id'])) {
-//     // If not logged in, redirect to login page
-//     header("Location: Login-Register.php");
-//     exit;
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $payment_method = $_POST['payment_method'];
-    $_SESSION['payment_method'] = $payment_method; // Store payment method in session
-    header("Location: payment-details.php"); // Redirect to payment details page
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: Login-Register.php");
     exit;
-    
 }
 
 include('connection.php');
 
-// Get the user_id from the session
+// Get user details from register table
 $user_id = $_SESSION['user_id'];
-
-// Fetch cart items for this user from the database
-$sql = "SELECT cart.*, products.price FROM cart INNER JOIN products ON cart.product_id = products.id WHERE cart.user_id = ?";
-$stmt = $con->prepare($sql);
+$stmt = $con->prepare("SELECT * FROM register WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$result = $stmt->get_result();
+$user = $stmt->get_result()->fetch_assoc();
 
-$total_amount = 0;
+// Get cart total
+$stmt = $con->prepare("SELECT SUM(p.price * c.quantity) as total FROM cart c JOIN products p ON c.product_id = p.id WHERE c.user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
+$cart_total = $result['total'] ?? 0;
 
-// Calculate the total amount for the cart
-while ($row = $result->fetch_assoc()) {
-    $total_amount += $row['quantity'] * $row['price'];
+// Check if cart is empty
+$stmt = $con->prepare("SELECT COUNT(*) as count FROM cart WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$cart_count = $stmt->get_result()->fetch_assoc()['count'];
+
+if ($cart_count == 0) {
+    header("Location: cart.php?error=empty");
+    exit;
 }
 
-// Handle the payment process (dummy processing here)
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $payment_method = $_POST['payment_method']; // Payment method selected by the user
-    $payment_status = 'Pending'; // Assuming payment is initially pending
+// Process order submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate input
+    if (empty($_POST['address']) || empty($_POST['phone'])) {
+        $error = "Please fill in all required fields.";
+    } else {
+        try {
+            $con->begin_transaction();
 
-    // Insert the order into the database (order processing)
-    $order_sql = "INSERT INTO orders (user_id, total_amount, payment_method, payment_status) VALUES (?, ?, ?, ?)";
-    $order_stmt = $con->prepare($order_sql);
-    $order_stmt->bind_param("idss", $user_id, $total_amount, $payment_method, $payment_status);
-    $order_stmt->execute();
+            // Insert order
+            $stmt = $con->prepare("INSERT INTO orders (user_id, total_amount, shipping_address, phone) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("idss", $user_id, $cart_total, $_POST['address'], $_POST['phone']);
+            $stmt->execute();
+            $order_id = $con->insert_id;
 
-    // Here, you can integrate a real payment gateway like Razorpay, Paytm, etc.
-    // For now, let's assume payment is successful and update the status
-    $payment_status = 'Successful'; // After payment processing
-    $order_update_sql = "UPDATE orders SET payment_status = ? WHERE user_id = ? AND payment_status = 'Pending'";
-    $order_update_stmt = $con->prepare($order_update_sql);
-    $order_update_stmt->bind_param("si", $payment_status, $user_id);
-    $order_update_stmt->execute();
+            // Move cart items to order_items
+            $stmt = $con->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) SELECT ?, c.product_id, c.quantity, p.price FROM cart c JOIN products p ON c.product_id = p.id WHERE c.user_id = ?");
+            $stmt->bind_param("ii", $order_id, $user_id);
+            $stmt->execute();
 
-    // Redirect to confirmation page after payment
-    header("Location: order-confirmation.php");
-    exit;
+            // Clear user's cart
+            $stmt = $con->prepare("DELETE FROM cart WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            $con->commit();
+            header("Location: orders.php?success=1");
+            exit;
+        } catch (Exception $e) {
+            $con->rollback();
+            $error = "An error occurred while processing your order. Please try again.";
+        }
+    }
 }
 ?>
 
-
-<script>
-        // JavaScript to handle showing payment details based on selected payment method
-        function showPaymentDetails() {
-            let paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            let cardDetails = document.getElementById('card-details');
-            let paytmDetails = document.getElementById('paytm-details');
-            let gpayDetails = document.getElementById('gpay-details');
-            let netBankingDetails = document.getElementById('net-banking-details');
-            
-            // Hide all payment details sections
-            cardDetails.style.display = 'none';
-            paytmDetails.style.display = 'none';
-            gpayDetails.style.display = 'none';
-            netBankingDetails.style.display = 'none';
-
-            // Show relevant payment details section based on the selected payment method
-            if (paymentMethod == 'Credit/Debit Card') {
-                cardDetails.style.display = 'block';
-            } else if (paymentMethod == 'Paytm') {
-                paytmDetails.style.display = 'block';
-            } else if (paymentMethod == 'Google Pay') {
-                gpayDetails.style.display = 'block';
-            } else if (paymentMethod == 'Net Banking') {
-                netBankingDetails.style.display = 'block';
-            }
-        }
-    </script>
-<!-- Checkout Page (checkout.php) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,149 +77,246 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Neutralise Naturals</title>
     <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/cart.css">
-    <!-- <link rel="stylesheet" href="./css/index.css"> -->
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/85a51766c8.js" crossorigin="anonymous"></script>
-    <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jacques+Francois&display=swap"
-        rel="stylesheet">
-    <script src="./js/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <?php include('header.php')?>
 
     <main class="checkout-container">
-        <h1>Your Checkout</h1>
-        <div class="cart-summary">
-            <p>Total Amount: ₹<?php echo number_format($total_amount, 2); ?></p>
+        <div class="checkout-header">
+            <h1>Checkout</h1>
         </div>
 
-        <h2>Select Payment Method</h2>
-<form action="checkout.php" method="POST">
-    <div class="payment-option">
-        <input type="radio" id="credit-card" name="payment_method" value="Credit/Debit Card" required>
-        <label for="credit-card">Credit/Debit Card</label>
-    </div>
-    <div class="payment-option">
-        <input type="radio" id="paytm" name="payment_method" value="Paytm" required>
-        <label for="paytm">Paytm</label>
-    </div>
-    <div class="payment-option">
-        <input type="radio" id="gpay" name="payment_method" value="Google Pay" required>
-        <label for="gpay">Google Pay</label>
-    </div>
-    <div class="payment-option">
-        <input type="radio" id="net-banking" name="payment_method" value="Net Banking" required>
-        <label for="net-banking">Net Banking</label>
-    </div>
+        <?php if (isset($error)): ?>
+            <div class="error-message">
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
 
+        <div class="checkout-content">
+            <form method="POST" class="checkout-form">
+                <div class="form-section">
+                    <h2>Shipping Details</h2>
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" value="<?php echo htmlspecialchars($user['full_name']); ?>" readonly>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
+                    </div>
 
-    <button type="submit">Proceed to Pay</button>
-</form>
+                    <div class="form-group">
+                        <label for="phone">Phone Number*</label>
+                        <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                    </div>
 
+                    <div class="form-group">
+                        <label for="address">Shipping Address*</label>
+                        <textarea id="address" name="address" required rows="3"><?php echo htmlspecialchars($user['address']); ?></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Order Summary</h2>
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>₹<?php echo number_format($cart_total, 2); ?></span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>₹<?php echo number_format($cart_total, 2); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="payment-method">
+                        <h3>Payment Method</h3>
+                        <div class="payment-option">
+                            <input type="radio" id="cod" name="payment_method" value="Cash on Delivery" checked>
+                            <label for="cod">Cash on Delivery</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="cart.php" class="back-to-cart">
+                        <i class="fas fa-arrow-left"></i> Back to Cart
+                    </a>
+                    <button type="submit" class="confirm-order">
+                        Confirm Order <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </main>
 
- <?php include('footer.php');?>
+    <?php include('footer.php');?>
 
-    <script src="./js/cart.js"></script>
-    <script src="./js/script.js" defer></script>
-</body>
-</html>
-<style type="">
-    /* General Styles */
-
-
-/* Checkout Page Styles */
+<style>
 .checkout-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.checkout-header {
+    margin-bottom: 2rem;
+}
+
+.checkout-header h1 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.checkout-content {
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
 }
 
-.checkout-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
+.form-section {
+    margin-bottom: 2rem;
 }
 
-.checkout-container p {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    text-align: center;
-    color: #555;
-}
-
-.checkout-container h2 {
-    font-size: 2rem;
-    margin-top: 30px;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.cart-summary {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.cart-summary p {
+.form-section h2 {
     font-size: 1.4rem;
-    color: #333;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:read-only {
+    background-color: #f8f9fa;
+}
+
+.order-summary {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.summary-row.total {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.payment-method {
+    margin-top: 2rem;
+}
+
+.payment-method h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 
 .payment-option {
-    margin: 15px 0;
-    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.payment-option input {
-    margin-right: 10px;
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
 }
 
-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 1.2rem;
+.back-to-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-to-cart:hover {
+    color: var(--text-color);
+}
+
+.confirm-order {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--green-bg-color);
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
+.confirm-order:hover {
+    background-color: var(--dark-green-color);
 }
 
-form {
-    margin-top: 20px;
-}
-
-/* Responsive Styles */
 @media (max-width: 768px) {
-    .checkout-container {
-        padding: 15px;
+    .checkout-content {
+        padding: 1rem;
     }
 
-    .checkout-container h1 {
-        font-size: 2rem;
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    .checkout-container p {
-        font-size: 1rem;
+    .back-to-cart,
+    .confirm-order {
+        width: 100%;
+        justify-content: center;
     }
-
-    .checkou
-
+}
 </style>
+
+</body>
+</html>
