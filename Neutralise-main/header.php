@@ -98,20 +98,19 @@ if (session_status() === PHP_SESSION_NONE) {
     
             <a href="./Calculator.php">Psoriasis Calculator</a>
     
-           
-    
             <!-- Login/Register Dropdown on Hover -->
             <div class="user-dropdown">
                 <a href="" class="user-link" style="font-weight: bold;">
                     <i class="fa-solid fa-user"></i>
                 </a>
                 <div class="user-dropdown-content">
-                    <a href="./Login-Register.php">Login</a>
-                    <a href="./register.php">Register</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="./logout.php">Logout</a>
+                        <a href="orders.php">My Orders</a>
+                        <a href="./logout.php">Logout</a>
+                    <?php else: ?>
+                        <a href="./Login-Register.php">Login</a>
+                        <a href="./register.php">Register</a>
                     <?php endif; ?>
-
                 </div>
             </div>
         </div>
@@ -129,7 +128,6 @@ if (session_status() === PHP_SESSION_NONE) {
         <a href="./shop.php">Shop</a>
         <a href="./Calculator.php">Psoriasis Calculator</a>
 
-
         <div class="dropdown">
             <a href="./about-us.php" class="dropdown-btn" onclick="toggleDropdown(event)">About Us  
                 <i class="fa-solid fa-chevron-down"></i>     
@@ -142,20 +140,20 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
         
         <!-- Login/Register Dropdown on Hover -->
-            <div class="user-dropdown">
-                <a href="" class="user-link" style="font-weight: bold;">
-                    <i class="fa-solid fa-user"></i>
-                </a>
-                <div class="user-dropdown-content">
+        <div class="user-dropdown">
+            <a href="" class="user-link" style="font-weight: bold;">
+                <i class="fa-solid fa-user"></i>
+            </a>
+            <div class="user-dropdown-content">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="orders.php">My Orders</a>
+                    <a href="./logout.php">Logout</a>
+                <?php else: ?>
                     <a href="./Login-Register.php">Login</a>
                     <a href="./register.php">Register</a>
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="./logout.php">Logout</a>
-                    <?php endif; ?>
-
-                </div>
+                <?php endif; ?>
             </div>
-
+        </div>
     </div>
 
     <div class="black-effect" onclick="removeBlack()"></div>

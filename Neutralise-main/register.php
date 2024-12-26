@@ -1,110 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="max-age=86400">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neutralise Naturals</title>
-
-    <!-- stylesheet -->
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/Login-Register.css">
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/85a51766c8.js" crossorigin="anonymous"></script>
-    <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jacques+Francois&display=swap"
-        rel="stylesheet">
-</head>
-
-
-<body>
-    <!-------- Navbar --------->
-    <?php include 'header.php';?>
-
 <?php
-include 'connection.php'; // Include your database connection file
+session_start();
 
-if (isset($_POST['register'])) {
-    // Retrieve form data
-    $full_name = mysqli_real_escape_string($con, $_POST['full_name']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $phone = mysqli_real_escape_string($con, $_POST['phone']);
-    $address = mysqli_real_escape_string($con, $_POST['address']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    $confirm_password = mysqli_real_escape_string($con, $_POST['confirm_password']);
-    
-    // Check if passwords match
+// If user is already logged in, redirect to home page
+if (isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+}
+
+include('connection.php');
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $full_name = $_POST['full_name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Validate passwords match
     if ($password !== $confirm_password) {
-        echo "<script>alert('Passwords do not match!');</script>";
+        $error = "Passwords do not match";
     } else {
-        // Hash the password for security
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        // Check if email already exists
+        $stmt = $con->prepare("SELECT id FROM register WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        // Insert query
-        $sql = "INSERT INTO `register` (`full_name`, `email`, `phone`, `address`, `password`)
-                VALUES ('$full_name', '$email', '$phone', '$address', '$hashed_password')";
-
-        // Execute query
-        if (mysqli_query($con, $sql)) {
-            echo "<script>alert('Registration successful!');</script>";
-            header('Location: login-register.html'); // Redirect to login page
+        if ($result->num_rows > 0) {
+            $error = "Email already registered";
         } else {
-            echo "<script>alert('Error: " . mysqli_error($con) . "');</script>";
+            // Hash password
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert new user
+            $stmt = $con->prepare("INSERT INTO register (full_name, email, phone, address, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $full_name, $email, $phone, $address, $hashed_password);
+
+            if ($stmt->execute()) {
+                header("Location: Login-Register.php?registered=1");
+                exit;
+            } else {
+                $error = "Registration failed. Please try again.";
+            }
         }
     }
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Neutralise Naturals</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <?php include('header.php')?>
 
+    <main class="register-container">
+        <div class="register-box">
+            <h1>Create Account</h1>
+            
+            <?php if (isset($error)): ?>
+                <div class="error-message">
+                    <?php echo $error; ?>
+                </div>
+            <?php endif; ?>
 
-    <!-- Login/Register -->
+            <form method="POST" class="register-form">
+                <div class="form-group">
+                    <label for="full_name">Full Name*</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
 
-    <div class="form-container">
-         <p class="title">Welcome back</p>
-<form method="POST" class="form">
-  <!-- Full Name -->
-  <input type="text" name="full_name" class="input" placeholder="Full Name" required>
-  
-  <!-- Email -->
-  <input type="email" name="email" class="input" placeholder="Email" required>
-  
-  <!-- Phone -->
-  <input type="tel" name="phone" class="input" placeholder="Phone" pattern="[0-9]{10}" required>
-  
-  <!-- Address -->
-  <textarea name="address" class="input" placeholder="Address" rows="3" required></textarea>
-  
-  <!-- Password -->
-  <input type="password" name="password" class="input" placeholder="Password" required>
-  
-  <!-- Confirm Password -->
-  <input type="password" name="confirm_password" class="input" placeholder="Confirm Password" required>
-  
-  <!-- Register Button -->
-  <button type="submit" name="register" class="form-btn">Register</button>
+                <div class="form-group">
+                    <label for="email">Email*</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
 
-   <!-- <button type="button" class="form-btn" onclick="window.location.href='Login-Register.php'">Log in</button> -->
-  
-  <!-- Login Button -->
-  <p class="page-link">
-    <span class="page-link-label" onclick="window.location.href='Login-Register.php'">Already have an account?</span>
-   
-  </p>
+                <div class="form-group">
+                    <label for="phone">Phone Number*</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                </div>
 
-</form>
-       </div>
+                <div class="form-group">
+                    <label for="address">Address*</label>
+                    <textarea id="address" name="address" required rows="3"></textarea>
+                </div>
 
+                <div class="form-group">
+                    <label for="password">Password*</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                </div>
 
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password*</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+                </div>
 
-<?php include('footer.php');?>
+                <button type="submit" class="register-button">Create Account</button>
+            </form>
 
-<!-- ... rest of the existing code ... -->
-    <script src="./js/script.js" defer></script>
+            <div class="login-link">
+                Already have an account? <a href="Login-Register.php">Login here</a>
+            </div>
+        </div>
+    </main>
+
+    <?php include('footer.php')?>
+
+<style>
+.register-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: #f8f9fa;
+}
+
+.register-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.register-box h1 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--green-bg-color);
+    outline: none;
+}
+
+.register-button {
+    background-color: var(--green-bg-color);
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: var(--dark-green-color);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+}
+
+.login-link a {
+    color: var(--green-bg-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .register-box {
+        padding: 1.5rem;
+    }
+
+    .register-box h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.6rem;
+    }
+}
+</style>
+
 </body>
-
 </html>
