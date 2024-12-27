@@ -1,12 +1,4 @@
 <?php
-session_start();
-
-// Check if user is admin
-if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
-    header("Location: admin_login.php");
-    exit();
-}
-
 include 'connection.php';
 
 // Get statistics
@@ -14,6 +6,7 @@ $total_orders = mysqli_query($con, "SELECT COUNT(*) as count FROM orders")->fetc
 $total_products = mysqli_query($con, "SELECT COUNT(*) as count FROM products")->fetch_assoc()['count'];
 $total_customers = mysqli_query($con, "SELECT COUNT(*) as count FROM register")->fetch_assoc()['count'];
 $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orders")->fetch_assoc()['total'] ?? 0;
+$total_blogs = mysqli_query($con, "SELECT COUNT(*) as count FROM blogs")->fetch_assoc()['count'];
 ?>
 
 <!DOCTYPE html>
@@ -32,13 +25,6 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
     <div class="admin-dashboard">
         <div class="dashboard-header">
             <h1>Admin Dashboard</h1>
-            <div class="admin-info">
-                <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_name']); ?></span>
-                <a href="admin_logout.php" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
-            </div>
         </div>
 
         <div class="stats-container">
@@ -73,6 +59,14 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
                     <span class="stat-label">Total Revenue</span>
                 </div>
             </div>
+
+            <div class="stat-card">
+                <i class="fas fa-blog"></i>
+                <div class="stat-info">
+                    <span class="stat-value"><?php echo $total_blogs; ?></span>
+                    <span class="stat-label">Blog Posts</span>
+                </div>
+            </div>
         </div>
 
         <div class="admin-features">
@@ -92,36 +86,12 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
                 <p>Add, edit, or remove products</p>
             </div>
 
-            <div class="feature-card" onclick="window.location.href='view_customers.php'">
-                <div class="feature-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>Customer Management</h3>
-                <p>View customer details and orders</p>
-            </div>
-
-            <div class="feature-card" onclick="window.location.href='view_testimonials.php'">
-                <div class="feature-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <h3>Testimonials</h3>
-                <p>Manage customer testimonials</p>
-            </div>
-
-            <div class="feature-card" onclick="window.location.href='view_blog.php'">
+            <div class="feature-card" onclick="window.location.href='manage_blogs.php'">
                 <div class="feature-icon">
                     <i class="fas fa-blog"></i>
                 </div>
                 <h3>Blog Management</h3>
                 <p>Manage blog posts and content</p>
-            </div>
-
-            <div class="feature-card" onclick="window.location.href='admin_settings.php'">
-                <div class="feature-icon">
-                    <i class="fas fa-cog"></i>
-                </div>
-                <h3>Settings</h3>
-                <p>Manage admin settings</p>
             </div>
         </div>
     </div>
@@ -134,38 +104,28 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
 }
 
 .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .dashboard-header h1 {
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--text-color);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
 }
 
-.admin-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.logout-btn {
+.dashboard-header h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
     background: var(--green-bg-color);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
-}
-
-.logout-btn:hover {
-    background: var(--hover-color);
 }
 
 .stats-container {
@@ -177,96 +137,121 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
 
 .stat-card {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card i {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--green-bg-color);
 }
 
 .stat-info {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
     color: var(--text-color);
 }
 
 .stat-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #666;
 }
 
 .admin-features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 25px;
 }
 
 .feature-card {
     background: white;
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     background: var(--main-bg-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
 }
 
 .feature-icon i {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--green-bg-color);
 }
 
 .feature-card h3 {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--text-color);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .feature-card p {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #666;
+    line-height: 1.5;
 }
 
 @media (max-width: 768px) {
     .dashboard-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
+        margin-bottom: 25px;
     }
 
-    .admin-info {
-        flex-direction: column;
+    .dashboard-header h1 {
+        font-size: 2rem;
     }
 
     .stats-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .admin-features {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
 }
 
@@ -277,6 +262,10 @@ $total_revenue = mysqli_query($con, "SELECT SUM(total_amount) as total FROM orde
 
     .admin-features {
         grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        padding: 25px;
     }
 }
 </style>

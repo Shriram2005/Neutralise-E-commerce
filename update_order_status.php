@@ -1,46 +1,33 @@
 <?php
 include 'connection.php';
 
-// Check if user is admin
-if (!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
-    echo json_encode(['error' => 'Unauthorized access', 'redirect' => 'index.php']);
-    exit();
-}
+header('Content-Type: application/json');
 
-// Get POST data
-$data = json_decode(file_get_contents('php://input'), true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $order_id = isset($_POST['order_id']) ? (int)$_POST['order_id'] : 0;
+    $status = isset($_POST['status']) ? $_POST['status'] : '';
 
-if (!isset($data['order_id']) || !isset($data['status'])) {
-    echo json_encode(['error' => 'Order ID and status are required']);
-    exit();
-}
+    // Validate inputs
+    if ($order_id <= 0 || empty($status)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid input parameters']);
+        exit;
+    }
 
-$order_id = $data['order_id'];
-$status = $data['status'];
+    // Update the order status
+    $query = "UPDATE orders SET status = ? WHERE id = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('si', $status, $order_id);
+    
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update order status']);
+    }
 
-// Validate status
-$valid_statuses = ['pending', 'processing', 'completed'];
-if (!in_array($status, $valid_statuses)) {
-    echo json_encode(['error' => 'Invalid status']);
-    exit();
-}
-
-// Update order status
-$update_query = "UPDATE orders SET status = ? WHERE order_id = ?";
-$stmt = $con->prepare($update_query);
-$stmt->bind_param("si", $status, $order_id);
-
-$response = [];
-if ($stmt->execute()) {
-    $response['success'] = true;
-    $response['message'] = 'Order status updated successfully';
+    $stmt->close();
 } else {
-    $response['success'] = false;
-    $response['error'] = 'Failed to update order status';
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
-echo json_encode($response);
-
-$stmt->close();
 $con->close();
 ?> 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2024 at 12:37 PM
+-- Generation Time: Dec 27, 2024 at 02:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `neutral`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_login` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`id`, `username`, `password`, `name`, `email`, `created_at`, `last_login`) VALUES
+(1, 'admin', '$2y$10$YQtQzlXM0JHXnrR9yZOkUuHT3V5Hy0k9gVwqT.7LwE5vgQVkV8Iq.', 'Administrator', 'admin@neutralise.com', '2024-12-27 12:50:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -95,13 +118,6 @@ CREATE TABLE `cart` (
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`, `size_option`, `added_at`) VALUES
-(3, 0, 2, 1, NULL, '2024-12-26 11:13:31');
-
 -- --------------------------------------------------------
 
 --
@@ -135,15 +151,28 @@ INSERT INTO `contact_form` (`id`, `name`, `email`, `phone`, `subject`, `message`
 --
 
 CREATE TABLE `orders` (
-  `order_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('Pending','Processing','Shipped','Delivered','Cancelled') NOT NULL DEFAULT 'Pending',
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `shipping_address` text NOT NULL,
-  `phone` varchar(15) NOT NULL,
-  `payment_method` enum('Cash on Delivery') DEFAULT 'Cash on Delivery',
-  `order_status` enum('Pending','Processing','Shipped','Delivered','Cancelled') DEFAULT 'Pending'
+  `payment_method` varchar(50) NOT NULL,
+  `payment_status` enum('Pending','Completed','Failed') NOT NULL DEFAULT 'Pending',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `order_date`, `shipping_address`, `payment_method`, `payment_status`) VALUES
+(1, 0, 1600.00, 'Pending', '2024-12-26 17:10:49', 'yukiyuk iukuiykui kyuyk yuik yu uik yuh ui uik yu kk yu kyu yuk uyik t yujur tyj', 'Cash on Delivery', 'Pending'),
+(2, 0, 1001.00, 'Pending', '2024-12-26 17:35:11', 'nashik', 'Cash on Delivery', 'Pending'),
+(3, 0, 6404.00, 'Pending', '2024-12-26 21:02:31', 'nashik', 'Cash on Delivery', 'Pending'),
+(4, 0, 1801.00, 'Pending', '2024-12-27 18:31:39', 'nashik', 'Cash on Delivery', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -152,12 +181,29 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `order_items` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 2, 2, 800.00),
+(2, 2, 1, 1, 1001.00),
+(3, 3, 2, 3, 800.00),
+(4, 3, 1, 4, 1001.00),
+(5, 4, 2, 1, 800.00),
+(6, 4, 1, 1, 1001.00);
 
 -- --------------------------------------------------------
 
@@ -244,16 +290,19 @@ CREATE TABLE `products` (
   `full_description` text DEFAULT NULL,
   `size_options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`size_options`)),
   `ingredients` text DEFAULT NULL,
-  `usage_instructions` text DEFAULT NULL
+  `usage_instructions` text DEFAULT NULL,
+  `featured` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `image1`, `image2`, `image3`, `category`, `tags`, `sku`, `rating`, `reviews_count`, `description`, `full_description`, `size_options`, `ingredients`, `usage_instructions`) VALUES
-(1, 'product 1', 1001.00, 'freepik__candid-image-photography-natural-textures-highly-r__56373.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56376.jpeg', 'demo', 'a,b,cc,dd,ccc', 'demo1', NULL, NULL, 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', '{\"one\":\"100ml\",\"two \":\"200gm\"}', 'aloo butter', 'dont eat , just apply'),
-(2, 'product 2', 800.00, 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56375.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'sdaf', 'asf', 'asdf', NULL, NULL, 'asdfafa', 'asdfasdf', '{\"asdf\":\"200ml\",\"fhhffh\":\"230gm\"}', 'sdfasdfafdasdf', 'asfasdfasdfasdf');
+INSERT INTO `products` (`id`, `name`, `price`, `image1`, `image2`, `image3`, `category`, `tags`, `sku`, `rating`, `reviews_count`, `description`, `full_description`, `size_options`, `ingredients`, `usage_instructions`, `featured`) VALUES
+(1, 'product 1', 1001.00, 'freepik__candid-image-photography-natural-textures-highly-r__56373.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56376.jpeg', 'demo', 'a,b,cc,dd,ccc', 'demo1', NULL, NULL, 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', 'kasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdfkasdjf aksdjf asjf aksdjf; asdlkfj;alskfj s;lkdfjlksdflskadfjl;ksfdjl asdfl;jk sadfalksfjl;kasjdf; l;jkas f;lj sadflj; asdf', '{\"one\":\"100ml\",\"two \":\"200gm\"}', 'aloo butter', 'dont eat , just apply', 1),
+(2, 'product 2', 800.00, 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56375.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56374.jpeg', 'sdaf', 'asf', 'asdf', NULL, NULL, 'asdfafa', 'asdfasdf', '{\"asdf\":\"200ml\",\"fhhffh\":\"230gm\"}', 'sdfasdfafdasdf', 'asfasdfasdfasdf', 1),
+(3, 'sdfaaf', 4525.00, 'freepik__candid-image-photography-natural-textures-highly-r__56367.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56368.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56369.jpeg', 'ergt', 'sdfgsd', 'gsdfg', NULL, NULL, 'sdfg', 'sdfg', '{\"sdfg\":\"sdfg\"}', 'sdfg', 'sdfg', 1),
+(4, 'sdfghgmjfg', 4574.00, 'freepik__candid-image-photography-natural-textures-highly-r__56372.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56368.jpeg', 'freepik__candid-image-photography-natural-textures-highly-r__56376.jpeg', 'fjhfgjhfgj', 'fgjdghjfg', 'dfgsdfg', NULL, NULL, 'sdfgsdg', 'sdfgsdfgs', '{\"sdfg\":\"sdfgsrdg\",\"sdfgs\":\"dfg\"}', 'dfgsdfgsdf', 'gsdfgsdfg', 1);
 
 -- --------------------------------------------------------
 
@@ -383,7 +432,7 @@ CREATE TABLE `testimonials` (
 INSERT INTO `testimonials` (`id`, `name`, `date`, `message`, `rating`, `imgSrc`) VALUES
 (1, 'Priya Sharma', '2023-06-15', 'Namaste! I\'ve been struggling with psoriasis for years, and Neutralise Naturals has been a true blessing. ', '4', '/contents/testimonials/users.png'),
 (2, 'Rajesh Patel', '2023-07-03', 'Being someone with very sensitive skin, I was scared to try new products. ', '★★★★★', '/contents/testimonials/users.png'),
-(3, 'Anita Desai', '2023-08-20', 'The holistic approach of Neutralise Naturals has totally transformed my skin health. ', '★★★★★', '/contents/testimonials/users.png'),
+(3, 'Anita Desai 222', '2023-08-20', 'The holistic approach of Neutralise Naturals has totally transformed my skin health. ', '', '/contents/testimonials/users.png'),
 (4, 'Vikram Singh', '2023-09-05', 'I was very doubtful at first, but after using Neutralise Naturals for 3 months, I\'m a true believer now. My psoriasis patches have reduced so much, and my skin feels so much more comfortable. Dhanyavaad, Neutralise Naturals!', '3', '/contents/testimonials/users.png'),
 (7, 'Pratiksha Sunil Sonawane', '2024-12-06', 'The Ayurvedic-inspired products from Neutralise Naturals match perfectly with my belief in natural healing. Not only has my skin improved, but  feeling more balanced overall. It like a spa day for my skin every day!', '4', 'users.png'),
 (10, 'shweta', '2024-12-03', 'jgsghsjfghdyfrtsugggggggggggfyrrrrrrrrrrrrrrrrrrrrrrrrrrr', '4', 'users.png'),
@@ -399,6 +448,14 @@ INSERT INTO `testimonials` (`id`, `name`, `date`, `message`, `rating`, `imgSrc`)
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `appointments`
@@ -430,7 +487,7 @@ ALTER TABLE `contact_form`
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -495,6 +552,12 @@ ALTER TABLE `testimonials`
 --
 
 --
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
@@ -510,7 +573,7 @@ ALTER TABLE `blogs`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `contact_form`
@@ -522,19 +585,19 @@ ALTER TABLE `contact_form`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `testimonials`
@@ -563,7 +626,7 @@ ALTER TABLE `orders`
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
