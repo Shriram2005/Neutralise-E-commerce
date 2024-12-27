@@ -144,8 +144,8 @@ $con->close();
 <style>
 .bento-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
@@ -157,7 +157,9 @@ $con->close();
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    aspect-ratio: 1;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
 }
 
 .bento-card:hover {
@@ -179,12 +181,15 @@ $con->close();
 }
 
 .product-image {
-    height: 60%;
-    overflow: hidden;
     position: relative;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    overflow: hidden;
 }
 
 .product-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -213,12 +218,29 @@ $con->close();
     opacity: 1;
 }
 
+.quick-view-btn {
+    background: var(--white-bg-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.quick-view-btn:hover {
+    background: var(--green-bg-color);
+    color: white;
+}
+
 .product-info {
-    padding: 15px;
-    height: 40%;
+    padding: 20px;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: var(--white-bg-color);
 }
 
 .product-title {
@@ -226,6 +248,10 @@ $con->close();
     font-size: 1.1rem;
     margin-bottom: 8px;
     color: var(--text-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .product-price {
@@ -233,46 +259,71 @@ $con->close();
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--green-bg-color);
-    margin-bottom: 10px;
+    margin: 10px 0;
 }
 
 .add-to-cart-btn {
     background: var(--green-bg-color);
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 100%;
     font-family: var(--font-body);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .add-to-cart-btn:hover {
     background: var(--hover-color);
 }
 
+@media (max-width: 1200px) {
+    .bento-large, .bento-wide {
+        grid-column: span 1;
+    }
+    .bento-tall {
+        grid-row: span 1;
+    }
+}
+
 @media (max-width: 768px) {
     .bento-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
         padding: 15px;
     }
     
-    .bento-large, .bento-wide {
-        grid-column: span 1;
-        grid-row: span 1;
-    }
-    
-    .bento-tall {
-        grid-row: span 1;
+    .product-info {
+        padding: 15px;
     }
 }
 
 @media (max-width: 480px) {
     .bento-grid {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 15px;
+        padding: 10px;
+    }
+    
+    .bento-card {
+        min-height: 350px;
+    }
+    
+    .product-title {
+        font-size: 1rem;
+    }
+    
+    .product-price {
+        font-size: 1.1rem;
+    }
+    
+    .add-to-cart-btn {
         padding: 10px;
     }
 }

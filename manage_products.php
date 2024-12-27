@@ -1,7 +1,6 @@
 <?php
 // Start output buffering at the very beginning
 ob_start();
-include 'header.php';
 include 'connection.php';
 
 // Initialize message variables
@@ -150,360 +149,628 @@ $products = $con->query("SELECT * FROM products ORDER BY id DESC");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Products - Neutralise Naturals</title>
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .admin-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        .product-form {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
-        .form-group {
-            margin-bottom: 1rem;
+
+        .page-header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin: 0;
         }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        .form-group textarea {
-            min-height: 100px;
-        }
-        .btn {
-            padding: 0.5rem 1rem;
+
+        .add-product-btn {
+            background: var(--green-bg-color);
+            color: white;
             border: none;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
-            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
         }
-        .btn-primary {
-            background: #4CAF50;
+
+        .add-product-btn:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .product-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .close-form-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .close-form-btn:hover {
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--green-bg-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .size-options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .size-options input {
+            flex: 1;
+        }
+
+        .remove-size-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-size-btn {
+            background: var(--green-bg-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .cancel-btn,
+        .submit-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn {
+            background: none;
+            border: 1px solid #ddd;
+            color: #666;
+        }
+
+        .submit-btn {
+            background: var(--green-bg-color);
+            border: none;
             color: white;
         }
-        .btn-danger {
-            background: #f44336;
-            color: white;
+
+        .cancel-btn:hover {
+            background: #f8f9fa;
+            border-color: #ccc;
         }
+
+        .submit-btn:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .products-table-wrapper {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
         .products-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 2rem;
         }
+
         .products-table th,
         .products-table td {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
+            padding: 15px;
             text-align: left;
+            border-bottom: 1px solid #eee;
         }
+
         .products-table th {
-            background: #f5f5f5;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #444;
         }
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
             border-radius: 4px;
         }
-        .alert-success {
-            background: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
         }
-        .alert-danger {
-            background: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
+
+        .edit-btn,
+        .delete-btn {
+            background: none;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            color: #4CAF50;
+        }
+
+        .delete-btn {
+            color: #dc3545;
+        }
+
+        .edit-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .image-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .add-product-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .products-table-wrapper {
+                padding: 15px;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <?php include 'header.php'; ?>
+
     <div class="admin-container">
-        <h1>Manage Products</h1>
+        <div class="page-header">
+            <h1>Manage Products</h1>
+            <button class="add-product-btn" onclick="showProductForm()">
+                <i class="fas fa-plus"></i> Add New Product
+            </button>
+        </div>
         
         <?php if ($success_message): ?>
-            <div class="alert alert-success"><?php echo $success_message; ?></div>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <?php echo $success_message; ?>
+            </div>
         <?php endif; ?>
         
         <?php if ($error_message): ?>
-            <div class="alert alert-danger"><?php echo $error_message; ?></div>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                <?php echo $error_message; ?>
+            </div>
         <?php endif; ?>
 
         <form class="product-form" method="POST" enctype="multipart/form-data" id="productForm">
-            <input type="hidden" name="action" value="add">
-            <input type="hidden" name="product_id" value="">
-            <div class="form-group">
-                <label for="name">Product Name</label>
-                <input type="text" id="name" name="name" required>
+            <div class="form-header">
+                <h2 id="formTitle">Add New Product</h2>
+                <button type="button" class="close-form-btn" onclick="hideProductForm()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
-            <div class="form-group">
-                <label for="price">Price (₹)</label>
-                <input type="number" id="price" name="price" step="0.01" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="category">Category</label>
-                <input type="text" id="category" name="category" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="tags">Tags (comma-separated)</label>
-                <input type="text" id="tags" name="tags">
-            </div>
-            
-            <div class="form-group">
-                <label for="sku">SKU</label>
-                <input type="text" id="sku" name="sku">
-            </div>
-            
-            <div class="form-group">
-                <label for="description">Short Description</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="full_description">Full Description</label>
-                <textarea id="full_description" name="full_description"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="ingredients">Ingredients</label>
-                <textarea id="ingredients" name="ingredients"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="usage_instructions">Usage Instructions</label>
-                <textarea id="usage_instructions" name="usage_instructions"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Size Options</label>
-                <div id="size-options-container">
-                    <div class="size-option-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" name="size_names[]" placeholder="Size (e.g., Small)" style="flex: 1;">
-                        <input type="text" name="size_values[]" placeholder="Value (e.g., 100ml)" style="flex: 1;">
-                        <button type="button" class="btn btn-danger remove-size" onclick="removeSizeOption(this)" style="flex: 0 0 auto;">Remove</button>
-                    </div>
+
+            <input type="hidden" name="action" value="add" id="formAction">
+            <input type="hidden" name="product_id" value="" id="productId">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Product Name*</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="addSizeOption()" style="margin-top: 10px;">Add Size Option</button>
+
+                <div class="form-group">
+                    <label for="price">Price (₹)*</label>
+                    <input type="number" id="price" name="price" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category*</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="BODY">BODY</option>
+                        <option value="SKIN">SKIN</option>
+                        <option value="FACE">FACE</option>
+                        <option value="HAIR">HAIR</option>
+                        <option value="BATH">BATH</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sku">SKU*</label>
+                    <input type="text" id="sku" name="sku" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated)</label>
+                    <input type="text" id="tags" name="tags" placeholder="e.g., organic, natural, ayurvedic">
+                </div>
+
+                <div class="form-group">
+                    <label>Size Options</label>
+                    <div id="sizeOptionsContainer">
+                        <div class="size-options">
+                            <input type="text" name="size_names[]" placeholder="Size Name (e.g., Small)">
+                            <input type="text" name="size_values[]" placeholder="Size Value (e.g., 100ml)">
+                            <button type="button" class="remove-size-btn" onclick="removeSize(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-size-btn" onclick="addSizeOption()">
+                        <i class="fas fa-plus"></i> Add Size Option
+                    </button>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Short Description*</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="full_description">Full Description*</label>
+                    <textarea id="full_description" name="full_description" required></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="ingredients">Ingredients*</label>
+                    <textarea id="ingredients" name="ingredients" required></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="usage_instructions">Usage Instructions*</label>
+                    <textarea id="usage_instructions" name="usage_instructions" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="image1">Main Image*</label>
+                    <input type="file" id="image1" name="image1" accept="image/*" onchange="previewImage(this, 'preview1')" required>
+                    <div class="image-preview" id="preview1"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="image2">Additional Images</label>
+                    <input type="file" id="image2" name="image2" accept="image/*" onchange="previewImage(this, 'preview2')">
+                    <div class="image-preview" id="preview2"></div>
+                    <input type="file" id="image3" name="image3" accept="image/*" onchange="previewImage(this, 'preview3')">
+                    <div class="image-preview" id="preview3"></div>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="image1">Main Image</label>
-                <input type="file" id="image1" name="image1" accept="image/*" <?php echo ($_POST['action'] == 'add' ? 'required' : ''); ?>>
-                <div id="current_image1"></div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="hideProductForm()">Cancel</button>
+                <button type="submit" class="submit-btn" id="submitBtn">Add Product</button>
             </div>
-            
-            <div class="form-group">
-                <label for="image2">Additional Image 1</label>
-                <input type="file" id="image2" name="image2" accept="image/*">
-                <div id="current_image2"></div>
-            </div>
-            
-            <div class="form-group">
-                <label for="image3">Additional Image 2</label>
-                <input type="file" id="image3" name="image3" accept="image/*">
-                <div id="current_image3"></div>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Add Product</button>
         </form>
 
-        <h2>Existing Products</h2>
-        <div style="overflow-x: auto;">
+        <div class="products-table-wrapper">
             <table class="products-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Image</th>
                         <th>Name</th>
                         <th>Price</th>
                         <th>Category</th>
+                        <th>SKU</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($product = $products->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $product['id']; ?></td>
-                            <td><?php echo htmlspecialchars($product['name']); ?></td>
-                            <td>₹<?php echo number_format($product['price'], 2); ?></td>
-                            <td><?php echo htmlspecialchars($product['category']); ?></td>
-                            <td>
-                                <form method="POST" style="display: inline;">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
-                                </form>
-                                <button class="btn btn-primary" onclick="editProduct(<?php echo htmlspecialchars(json_encode($product)); ?>)">Edit</button>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            <img src="contents/products/<?php echo $product['image1']; ?>" 
+                                 alt="<?php echo htmlspecialchars($product['name']); ?>" 
+                                 class="product-image">
+                        </td>
+                        <td><?php echo htmlspecialchars($product['name']); ?></td>
+                        <td>₹<?php echo number_format($product['price'], 2); ?></td>
+                        <td><?php echo htmlspecialchars($product['category']); ?></td>
+                        <td><?php echo htmlspecialchars($product['sku']); ?></td>
+                        <td class="action-buttons">
+                            <button class="edit-btn" onclick='editProduct(<?php echo json_encode($product); ?>)' title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" onclick="deleteProduct(<?php echo $product['id']; ?>)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
                     <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <?php include 'footer.php'; ?>
+
     <script>
-    function editProduct(product) {
-        // Fill the form with product data
-        document.querySelector('input[name="action"]').value = 'edit';
-        document.querySelector('input[name="product_id"]').value = product.id;
-        document.querySelector('input[name="name"]').value = product.name;
-        document.querySelector('input[name="price"]').value = product.price;
-        document.querySelector('input[name="category"]').value = product.category;
-        document.querySelector('input[name="tags"]').value = product.tags || '';
-        document.querySelector('input[name="sku"]').value = product.sku || '';
-        document.querySelector('textarea[name="description"]').value = product.description || '';
-        document.querySelector('textarea[name="full_description"]').value = product.full_description || '';
-        document.querySelector('textarea[name="ingredients"]').value = product.ingredients || '';
-        document.querySelector('textarea[name="usage_instructions"]').value = product.usage_instructions || '';
-        
-        // Handle size options
-        const sizeContainer = document.getElementById('size-options-container');
-        sizeContainer.innerHTML = ''; // Clear existing size options
-        
-        try {
+        function showProductForm() {
+            document.getElementById('productForm').style.display = 'block';
+            document.getElementById('formTitle').textContent = 'Add New Product';
+            document.getElementById('formAction').value = 'add';
+            document.getElementById('productId').value = '';
+            document.getElementById('submitBtn').textContent = 'Add Product';
+            document.getElementById('productForm').reset();
+            clearImagePreviews();
+        }
+
+        function hideProductForm() {
+            document.getElementById('productForm').style.display = 'none';
+            document.getElementById('productForm').reset();
+            clearImagePreviews();
+        }
+
+        function editProduct(product) {
+            document.getElementById('productForm').style.display = 'block';
+            document.getElementById('formTitle').textContent = 'Edit Product';
+            document.getElementById('formAction').value = 'edit';
+            document.getElementById('productId').value = product.id;
+            document.getElementById('submitBtn').textContent = 'Update Product';
+
+            // Fill form fields
+            document.getElementById('name').value = product.name;
+            document.getElementById('price').value = product.price;
+            document.getElementById('category').value = product.category;
+            document.getElementById('tags').value = product.tags;
+            document.getElementById('sku').value = product.sku;
+            document.getElementById('description').value = product.description;
+            document.getElementById('full_description').value = product.full_description;
+            document.getElementById('ingredients').value = product.ingredients;
+            document.getElementById('usage_instructions').value = product.usage_instructions;
+
+            // Handle size options
             const sizeOptions = JSON.parse(product.size_options || '{}');
-            if (Object.keys(sizeOptions).length === 0) {
-                // Add one empty row if no size options exist
+            const container = document.getElementById('sizeOptionsContainer');
+            container.innerHTML = '';
+            
+            if (Object.keys(sizeOptions).length > 0) {
+                for (const [name, value] of Object.entries(sizeOptions)) {
+                    addSizeOption(name, value);
+                }
+            } else {
                 addSizeOption();
-            } else {
-                Object.entries(sizeOptions).forEach(([name, value]) => {
-                    const row = document.createElement('div');
-                    row.className = 'size-option-row';
-                    row.style = 'display: flex; gap: 10px; margin-bottom: 10px;';
-                    row.innerHTML = `
-                        <input type="text" name="size_names[]" value="${name}" placeholder="Size (e.g., Small)" style="flex: 1;">
-                        <input type="text" name="size_values[]" value="${value}" placeholder="Value (e.g., 100ml)" style="flex: 1;">
-                        <button type="button" class="btn btn-danger remove-size" onclick="removeSizeOption(this)" style="flex: 0 0 auto;">Remove</button>
+            }
+
+            // Show existing images
+            if (product.image1) {
+                showExistingImage('preview1', product.image1);
+            }
+            if (product.image2) {
+                showExistingImage('preview2', product.image2);
+            }
+            if (product.image3) {
+                showExistingImage('preview3', product.image3);
+            }
+
+            // Make image1 not required when editing
+            document.getElementById('image1').removeAttribute('required');
+        }
+
+        function showExistingImage(previewId, imageName) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = `
+                <img src="contents/products/${imageName}" 
+                     alt="Product image" 
+                     class="preview-image">
+            `;
+        }
+
+        function clearImagePreviews() {
+            document.getElementById('preview1').innerHTML = '';
+            document.getElementById('preview2').innerHTML = '';
+            document.getElementById('preview3').innerHTML = '';
+        }
+
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" 
+                             alt="Image preview" 
+                             class="preview-image">
                     `;
-                    sizeContainer.appendChild(row);
-                });
-            }
-        } catch (e) {
-            console.error('Error parsing size options:', e);
-            addSizeOption();
-        }
-        
-        // Show current images
-        for (let i = 1; i <= 3; i++) {
-            const imageDiv = document.getElementById(`current_image${i}`);
-            const imageName = product[`image${i}`];
-            if (imageName) {
-                imageDiv.innerHTML = `
-                    <div style="margin: 10px 0;">
-                        <p>Current image: ${imageName}</p>
-                        <img src="contents/products/${imageName}" alt="Current Image ${i}" style="max-width: 100px; margin: 5px 0;">
-                        <p style="color: #666; font-size: 0.9em;">Upload a new image only if you want to change it</p>
-                    </div>
-                `;
-            } else {
-                imageDiv.innerHTML = '';
+                }
+                reader.readAsDataURL(input.files[0]);
             }
         }
-        
-        // Remove required attribute from image1 when editing
-        document.getElementById('image1').removeAttribute('required');
-        
-        // Change submit button text
-        document.querySelector('.product-form .btn-primary').textContent = 'Update Product';
-        
-        // Scroll to form
-        document.querySelector('.product-form').scrollIntoView({ behavior: 'smooth' });
-    }
 
-    function addSizeOption() {
-        const container = document.getElementById('size-options-container');
-        const row = document.createElement('div');
-        row.className = 'size-option-row';
-        row.style = 'display: flex; gap: 10px; margin-bottom: 10px;';
-        row.innerHTML = `
-            <input type="text" name="size_names[]" placeholder="Size (e.g., Small)" style="flex: 1;">
-            <input type="text" name="size_values[]" placeholder="Value (e.g., 100ml)" style="flex: 1;">
-            <button type="button" class="btn btn-danger remove-size" onclick="removeSizeOption(this)" style="flex: 0 0 auto;">Remove</button>
-        `;
-        container.appendChild(row);
-    }
+        function addSizeOption(name = '', value = '') {
+            const container = document.getElementById('sizeOptionsContainer');
+            const div = document.createElement('div');
+            div.className = 'size-options';
+            div.innerHTML = `
+                <input type="text" name="size_names[]" placeholder="Size Name (e.g., Small)" value="${name}">
+                <input type="text" name="size_values[]" placeholder="Size Value (e.g., 100ml)" value="${value}">
+                <button type="button" class="remove-size-btn" onclick="removeSize(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(div);
+        }
 
-    function removeSizeOption(button) {
-        const container = document.getElementById('size-options-container');
-        if (container.children.length > 1) {
+        function removeSize(button) {
             button.parentElement.remove();
         }
-    }
 
-    // Add form submit handler to convert size options to JSON
-    document.querySelector('.product-form').addEventListener('submit', function(e) {
-        // Remove the default e.preventDefault() to allow normal form submission
-        // We don't need to handle JSON conversion in JavaScript anymore
-        // as it's now handled in PHP
-        
-        // Validate that at least one size option is filled
-        const sizeNames = [...document.getElementsByName('size_names[]')].map(input => input.value.trim());
-        const sizeValues = [...document.getElementsByName('size_values[]')].map(input => input.value.trim());
-        
-        let hasValidSize = false;
-        for (let i = 0; i < sizeNames.length; i++) {
-            if (sizeNames[i] && sizeValues[i]) {
-                hasValidSize = true;
-                break;
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                window.location.href = `delete_product.php?id=${id}`;
             }
         }
-        
-        if (!hasValidSize) {
-            e.preventDefault();
-            alert('Please add at least one size option for the product.');
-            return false;
-        }
-    });
 
-    // Add form reset handler
-    document.getElementById('productForm').addEventListener('reset', function() {
-        // Reset action to 'add' and clear product_id
-        document.querySelector('input[name="action"]').value = 'add';
-        document.querySelector('input[name="product_id"]').value = '';
-        // Reset button text
-        document.querySelector('.product-form .btn-primary').textContent = 'Add Product';
-        // Clear current images
-        for (let i = 1; i <= 3; i++) {
-            document.getElementById(`current_image${i}`).innerHTML = '';
-        }
-        // Reset size options to default
-        const sizeContainer = document.getElementById('size-options-container');
-        sizeContainer.innerHTML = '';
-        addSizeOption();
-        // Make image1 required again
-        document.getElementById('image1').setAttribute('required', 'required');
-    });
-
-    // Add a clear form button
-    const formButtons = document.querySelector('.product-form .btn-primary').parentElement;
-    const clearButton = document.createElement('button');
-    clearButton.type = 'button';
-    clearButton.className = 'btn btn-danger';
-    clearButton.textContent = 'Clear Form';
-    clearButton.onclick = function() {
-        if(confirm('Are you sure you want to clear the form?')) {
-            document.getElementById('productForm').reset();
-        }
-    };
-    formButtons.appendChild(clearButton);
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            const successAlert = document.querySelector('.alert-success');
+            if (successAlert) {
+                successAlert.style.display = 'none';
+            }
+        }, 3000);
     </script>
-
-    <?php include('footer.php'); ?>
 </body>
 </html> 

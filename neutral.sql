@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2024 at 02:26 PM
+-- Generation Time: Dec 27, 2024 at 03:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -151,28 +151,26 @@ INSERT INTO `contact_form` (`id`, `name`, `email`, `phone`, `subject`, `message`
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `status` enum('Pending','Processing','Shipped','Delivered','Cancelled') NOT NULL DEFAULT 'Pending',
   `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `shipping_address` text NOT NULL,
-  `payment_method` varchar(50) NOT NULL,
+  `payment_method` varchar(50) NOT NULL DEFAULT 'Cash on Delivery',
   `payment_status` enum('Pending','Completed','Failed') NOT NULL DEFAULT 'Pending',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`) ON DELETE CASCADE
+  `phone` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `order_date`, `shipping_address`, `payment_method`, `payment_status`) VALUES
-(1, 0, 1600.00, 'Pending', '2024-12-26 17:10:49', 'yukiyuk iukuiykui kyuyk yuik yu uik yuh ui uik yu kk yu kyu yuk uyik t yujur tyj', 'Cash on Delivery', 'Pending'),
-(2, 0, 1001.00, 'Pending', '2024-12-26 17:35:11', 'nashik', 'Cash on Delivery', 'Pending'),
-(3, 0, 6404.00, 'Pending', '2024-12-26 21:02:31', 'nashik', 'Cash on Delivery', 'Pending'),
-(4, 0, 1801.00, 'Pending', '2024-12-27 18:31:39', 'nashik', 'Cash on Delivery', 'Pending');
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `order_date`, `shipping_address`, `payment_method`, `payment_status`, `phone`) VALUES
+(1, 0, 1600.00, 'Pending', '2024-12-26 11:40:49', 'yukiyuk iukuiykui kyuyk yuik yu uik yuh ui uik yu kk yu kyu yuk uyik t yujur tyj', 'Cash on Delivery', 'Pending', '9412356789'),
+(2, 0, 1001.00, 'Pending', '2024-12-26 12:05:11', 'nashik', 'Cash on Delivery', 'Pending', '9412356789'),
+(3, 0, 6404.00, 'Pending', '2024-12-26 15:32:31', 'nashik', 'Cash on Delivery', 'Pending', '9412356789'),
+(4, 0, 1801.00, 'Pending', '2024-12-27 13:01:39', 'nashik', 'Cash on Delivery', 'Pending', '9412356789');
 
 -- --------------------------------------------------------
 
@@ -181,16 +179,11 @@ INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `order_date`, `
 --
 
 CREATE TABLE `order_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`),
-  KEY `product_id` (`product_id`),
-  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -488,7 +481,8 @@ ALTER TABLE `contact_form`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`) ON DELETE CASCADE;
 
 --
 -- Indexes for table `order_items`
@@ -591,7 +585,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -617,17 +611,11 @@ ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `register` (`id`);
-
---
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
