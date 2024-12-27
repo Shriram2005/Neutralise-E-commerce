@@ -104,277 +104,94 @@ if ($result->num_rows > 0) {
     </div>
 
 <div class="products-scroll-container">
-<!-- Space for bento grid -->
-<section class="Bento-Grid">
-        <div
-          class="container"
-          style="
-            display: flex;
-            height: 100%;
-            width: 100%;
-            align-items: center;
-            justify-content: center;
-          "
-        >
-          <div
-            class="grid"
-            style="
-              display: grid;
-              height: 0%;
-              width: 80%;
-              grid-template-columns: repeat(4, 1fr);
-              grid-template-rows: repeat(4, 1fr);
-              gap: 16px;
-              padding: 8px;
-              border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                0 1px 2px rgba(0, 0, 0, 0.1);
-            "
-          >
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 2;
-                grid-row: span 4;
-                background-color: rgb(255, 255, 255);
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0435.JPG"
-                alt="product 1"
-                style="height: 100%; width: 80%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
+    <?php
+    if ($category == 'ALL') {
+        $left_products = [];
+        $right_products = [];
 
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 1;
-                grid-row: span 4;
-                background-color: lightGray;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0477.JPG"
-                alt="product 2"
-                style="height: 100%; width: 100%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
-
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 1;
-                grid-row: span 4;
-                background-color: lightGray;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0435.JPG"
-                alt="product 1"
-                style="height: 100%; width: 100%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
-
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 1;
-                grid-row: span 4;
-                background-color: lightGray;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0435.JPG"
-                alt="product 1"
-                style="height: 100%; width: 100%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
-
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 1;
-                grid-row: span 4;
-                background-color: lightGray;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0435.JPG"
-                alt="product 1"
-                style="height: 100%; width: 100%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
-
-            <div
-              style="
-                font-family: 'M PLUS 2 Variable', sans-serif;
-                grid-column: span 2;
-                grid-row: span 4;
-                background-color: rgb(255, 255, 255);
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25),
-                  0 1px 2px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-              "
-            >
-              <img
-                src="./contents/Pd_Imgs/1Q1A0435.JPG"
-                alt="product 1"
-                style="height: 100%; width: 80%"
-              />
-              <div
-                style="
-                  position: absolute;
-                  bottom: 10px;
-                  left: 10px;
-                  width: calc(100% - 20px);
-                  background: linear-gradient(to bottom, #ffffff, #a2b139);
-                  color: white;
-                  padding: 5px;
-                  border-radius: 5px;
-                  overflow: hidden;
-                "
-              >
-                <h4 style="margin: 0; color: #a2b139; font-weight: bold">
-                  Product Title
-                </h4>
-                <p style="margin: 0; font-weight: bold">$Price</p>
-              </div>
-            </div>
-          </div>
+        for ($i = 0; $i < count($products); $i++) {
+            if ($i % 2 == 0) {
+                $left_products[] = $products[$i];
+            } else {
+                $right_products[] = $products[$i];
+            }
+        }
+        ?>
+        <div class="products-row products-row-left">
+            <?php
+            foreach ($left_products as $row) {
+                echo '
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="contents/products/' . $row['image1'] . '" loading="lazy" alt="' . $row['name'] . '" class="product-img">
+                            <div class="product-overlay">
+                                <a href="product-view.php?id=' . $row['id'] . '" class="quick-view-btn">Quick View</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">' . $row['name'] . '</h3>
+                            <p class="product-price">₹' . $row['price'] . '</p>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>';
+            }
+            ?>
         </div>
-      </section>
-      <!-- End of bento grid -->
-        
+
+        <div class="products-row products-row-right">
+            <?php
+            foreach ($right_products as $row) {
+                echo '
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="contents/products/' . $row['image1'] . '" loading="lazy" alt="' . $row['name'] . '" class="product-img">
+                            <div class="product-overlay">
+                                <a href="product-view.php?id=' . $row['id'] . '" class="quick-view-btn">Quick View</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">' . $row['name'] . '</h3>
+                            <p class="product-price">₹' . $row['price'] . '</p>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>';
+            }
+            ?>
+        </div>
+        <?php
+    } else {
+        ?>
+        <div class="products-row">
+            <?php
+            foreach ($products as $row) {
+                echo '
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="contents/products/' . $row['image1'] . '" loading="lazy" alt="' . $row['name'] . '" class="product-img">
+                            <div class="product-overlay">
+                                <a href="product-view.php?id=' . $row['id'] . '" class="quick-view-btn">Quick View</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">' . $row['name'] . '</h3>
+                            <p class="product-price">₹' . $row['price'] . '</p>
+                            <button class="add-to-cart-btn" onclick="addToCart(\'' . $row['id'] . '\', \'' . addslashes($row['name']) . '\', \'' . $row['price'] . '\', \'' . $row['image1'] . '\')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>';
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+</div>
+
 </div>
 
 <?php
@@ -497,146 +314,46 @@ if ($result->num_rows > 0) {
 
 
 <section class="testimonials-section">
-    <!-- Testimonials Section -->
+    <h2>What Our Customers Say</h2>
+    <div class="testimonials-container">
+        <?php
+        // Fetch testimonials from the database
+        $result = mysqli_query($con, "SELECT imgSrc, name, date, message, rating FROM testimonials");
 
-    <h2 class="TestiHeadline">What Our Customers Say</h2>
-    <section class="testimonials-section">
-      <div class="container">
-        <div class="card card-1">
-          <div class="heading">
-            <div class="img-wrapper">
-              <div class="border"></div>
-              <img
-                src="https://raw.githubusercontent.com/khatri2002/testimonials-grid-section/refs/heads/main/images/image-daniel.jpg"
-                alt="Daniel Clifford"
-              />
+        while ($testimonial = mysqli_fetch_assoc($result)):
+            $imgSrc = "contents/products/" . $testimonial['imgSrc']; // Assuming the image is stored in this folder
+            $name = htmlspecialchars($testimonial['name']);
+            $date = htmlspecialchars($testimonial['date']);
+            $message = nl2br(htmlspecialchars($testimonial['message'])); // Format multiline text
+            $rating = (int) $testimonial['rating']; // Numeric rating (1-5)
+        ?>
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <img src="<?php echo $imgSrc; ?>" alt="<?php echo $name; ?>" class="user-image">
+                    <div class="testimonial-info">
+                        <h3><?php echo $name; ?></h3>
+                        <span class="testimonial-date"><?php echo date('d F, Y', strtotime($date)); ?></span>
+                    </div>
+                </div>
+                <p class="testimonial-text"><?php echo '"' . $message . '"'; ?></p>
+                <div class="testimonial-rating">
+                    <?php
+                    // Display the rating stars
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= $rating) {
+                            echo '<span>&#9733;</span>'; // Filled star (★)
+                        } else {
+                            echo '<span>&#9734;</span>'; // Empty star (☆)
+                        }
+                    }
+                    ?>
+                </div>
+
             </div>
-            <div class="text">
-              <h1>Priya Sharma</h1>
-              <h2>15 June, 2023</h2>
-            </div>
-          </div>
-          <div class="main">
-            <h3>★★★★★</h3>
-          </div>
-          <div class="desc">
-            <p>
-              "Namaste! I've been struggling with psoriasis for years, and
-              Neutralise Naturals has been a true blessing. Their wheatgrass
-              powder and Ayurvedic skincare products have made such a
-              difference. My skin feels so much better now, and I'm finally
-              confident again. Thank you, Neutralise Naturals!"
-            </p>
-          </div>
-        </div>
-        <div class="card card-2">
-          <div class="heading">
-            <div class="img-wrapper">
-              <div class="border"></div>
-              <img
-                src="https://raw.githubusercontent.com/khatri2002/testimonials-grid-section/refs/heads/main/images/image-jonathan.jpg"
-                alt="Jonathan Walters"
-              />
-            </div>
-            <div class="text">
-              <h1>Rajesh Patel</h1>
-              <h2>3 July, 2023</h2>
-            </div>
-          </div>
-          <div class="main">
-            <h3>★★★★★</h3>
-          </div>
-          <div class="desc">
-            <p>
-              "Being someone with very sensitive skin, I was scared to try new
-              products. But Neutralise Naturals' gentle and natural approach has
-              done wonders for me. My skin is much clearer now!"
-            </p>
-          </div>
-        </div>
-        <div class="card card-3">
-          <div class="heading">
-            <div class="img-wrapper">
-              <div class="border"></div>
-              <img
-                src="https://raw.githubusercontent.com/khatri2002/testimonials-grid-section/refs/heads/main/images/image-jeanette.jpg"
-                alt="Jeanette Harmon"
-              />
-            </div>
-            <div class="text">
-              <h1>Anita Desai</h1>
-              <h2>20 August, 2023</h2>
-            </div>
-          </div>
-          <div class="main">
-            <h3>★★★★★</h3>
-          </div>
-          <div class="desc">
-            <p>
-              " The holistic approach of Neutralise Naturals has totally
-              transformed my skin health. Their diet tips, wellness advice, and
-              amazing products have given me the perfect tools to manage my
-              psoriasis effectively. I'm so grateful for this Ayurvedic miracle!
-              It's like having a personal skin guru. Highly recommended for
-              anyone struggling with skin issues."
-            </p>
-          </div>
-        </div>
-        <div class="card card-4">
-          <div class="heading">
-            <div class="img-wrapper">
-              <div class="border"></div>
-              <img
-                src="https://raw.githubusercontent.com/khatri2002/testimonials-grid-section/refs/heads/main/images/image-patrick.jpg"
-                alt="Patrick Abrams"
-              />
-            </div>
-            <div class="text">
-              <h1>Vikram Singh</h1>
-              <h2>5 September, 2023</h2>
-            </div>
-          </div>
-          <div class="main">
-            <h3>★★★★★</h3>
-          </div>
-          <div class="desc">
-            <p>
-              I was very doubtful at first, but after using Neutralise Naturals
-              for 3 months, I'm a true believer now. My psoriasis patches have
-              reduced so much, and my skin feels so much more comfortable.
-              Dhanyavaad, Neutralise Naturals!
-            </p>
-          </div>
-        </div>
-        <div class="card card-5">
-          <div class="heading">
-            <div class="img-wrapper">
-              <div class="border"></div>
-              <img
-                src="https://raw.githubusercontent.com/khatri2002/testimonials-grid-section/refs/heads/main/images/image-kira.jpg"
-                alt="Kira Whittle"
-              />
-            </div>
-            <div class="text">
-              <h1>Meera Reddy</h1>
-              <h2>12 October, 2023</h2>
-            </div>
-          </div>
-          <div class="main">
-            <h3>★★★★★</h3>
-          </div>
-          <div class="desc">
-            <p>
-              "The Ayurvedic-inspired products from Neutralise Naturals match
-              perfectly with my belief in natural healing. Not only has my skin
-              improved, but I'm feeling more balanced overall. It's like a spa
-              day for my skin every day!"
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-    
+
+        <?php endwhile; ?>
+
+    </div>
 </section>
 
 <div class="feedback-btn-area" style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
@@ -785,93 +502,65 @@ $con->close();
     
 
     <!-- features section ------------------------->
+    <h1 class="features-title">Why Choose Us</h1>
 
-    <section id="section-why-choose-us" class="full-width-flex-container">
-  <div id="why-choose-us-container" class="content-max-width center-content">
-    <div class="header-flex-container">
-      <h1 id="why-choose-us-title" class="section-title text-purple">WHY CHOOSE US</h1>
-      <div class="image-container">
-        <img
-          id="arrow-icon"
-          src="./contents/aboutUs/image1.JPG"
-          alt="Decorative Arrow"
-          class="decorative-arrow-image"
-        />
-      </div>
+    <div class="features-section">
+        <div class="feature-box">
+            <img src="./contents/features/trophy.webp" loading="lazy" alt="feature1" class="feature-img">
+            <h3>CURATED PRODUCTS</h3>
+            <p>Handpicked natural ingredients like Wheat Grass, Coconut oil, specific herbs in making of wheatgrass
+                products.</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="./contents/features/handmade.webp" loading="lazy" alt="feature2" class="feature-img">
+            <h3>HANDMADE PRODUCTS</h3>
+            <p>Crafted with passion in use of organic ingredients that supports for all skin types for natural
+                results.</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="./contents/features/natural.webp" loading="lazy" alt="feature3" class="feature-img">
+            <h3>100%NATURAL PRODUCTS</h3>
+            <p>India's first Products made of Hydroponic Wheatgrass Products with 100% pest-free hygienic growing
+                system.</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="./contents/features/shipping.webp" loading="lazy" alt="feature4" class="feature-img">
+            <h3>SHIPPING</h3>
+            <p>To reach our customers at there door step. By serving at Pan India level.</p>
+        </div>
     </div>
-    
-
-    <div id="stats-container" class="two-column-grid">
-      <div class="stat-item text-center">
-        <span class="stat-percentage text-purple-bold">100%</span>
-        <p class="stat-description text-gray-light">NATURAL PRODUCTS.</p>
-      </div>
-      <div class="stat-item text-center">
-        <!-- Changed icon to solid version -->
-        <span class="stat-percentage text-purple-bold"><i class="fa-solid fa-headphones-simple"></i>
-        </span>
-        <p class="stat-description text-gray-light">Customer Support.</p>
-      </div>
-    </div>
-
-    <div id="info-card-container" class="responsive-grid">
-      <div class="info-card purple-card">
-        <h2 class="card-title">CURATED PRODUCTS</h2>
-        <p class="card-description">Handpicked natural ingredients like Wheat Grass, Coconut oil, specific herbs in making of wheatgrass products.</p>
-      </div>
-      <div class="info-card blue-card">
-        <h2 class="card-title">HANDMADE PRODUCTS</h2>
-        <p class="card-description">Crafted with passion in use of organic ingredients that supports for all skin types for natural results.</p>
-      </div>
-      <div class="info-card gray-card">
-        <h2 class="card-title">SHIPPING</h2>
-        <p class="card-description">To reach our customers at there door step. By serving at Pan India level.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
 
 
-     <!-- Youtube video and paragrphs over here -->
+    <!-- Youtube video and paragrphs over here -->
     <!-- Psoriasis Reversal Section -->
     <div class="psoriasis-container">
-      <h2 class="psoriasis-main-title">
-        Neutralise Naturals: Nature's Cure for Chronic Skin Conditions
-      </h2>
+        <h2 class="psoriasis-main-title">Neutralise Naturals: Nature's Cure for Chronic Skin Conditions</h2>
 
-      <!-- Left Section with YouTube Video -->
-      <div class="psoriasis-left">
-        <h3 class="psoriasis-subtitle">Customer Testimonial:</h3>
-        <iframe
-          class="psoriasis-video"
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/zcZoJl4h7mU?si=Oh0j0YV1rxJEGsVX"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; 
-            encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        >
-        </iframe>
-      </div>
+        <!-- Left Section with YouTube Video -->
+        <div class="psoriasis-left">
+            <h3 class="psoriasis-subtitle">Customer Testimonial:</h3>
+            <iframe class="psoriasis-video" width="560" height="315"
+                src="https://www.youtube.com/embed/zcZoJl4h7mU?si=Oh0j0YV1rxJEGsVX" title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; 
+            encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+        </div>
 
-      <!-- Right Section with Text Content -->
-      <div class="psoriasis-right">
-        <p class="psoriasis-paragraph">
-          Tired of psoriasis ruling your life? <br /><strong
-            >Neutralise Naturals</strong
-          >
-          is your secret weapon. Our Ayurvedic-inspired skincare, powered by
-          pure, hydroponic wheatgrass, is a game-changer. Nourish your skin from
-          within and out, and watch psoriasis fade away.
-        </p>
-        <p class="psoriasis-paragraph">
-          Say goodbye to flakes, itchiness, and self-doubt. It's time to reclaim
-          your skin—and your confidence.
-        </p>
-      </div>
+        <!-- Right Section with Text Content -->
+        <div class="psoriasis-right">
+            <p class="psoriasis-paragraph">
+                Tired of psoriasis ruling your life? <br><strong>Neutralise Naturals</strong> is your secret weapon.
+                Our Ayurvedic-inspired skincare, powered by pure, hydroponic wheatgrass, is a game-changer. Nourish
+                your skin from within and out, and watch psoriasis fade away.
+            </p>
+            <p class="psoriasis-paragraph">
+                Say goodbye to flakes, itchiness, and self-doubt. It's time to reclaim your skin—and your
+                confidence.
+            </p>
+        </div>
     </div>
 
     <!-- Footer --------------------------------------->
