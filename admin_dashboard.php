@@ -93,6 +93,14 @@ $total_blogs = mysqli_query($con, "SELECT COUNT(*) as count FROM blogs")->fetch_
                 <h3>Blog Management</h3>
                 <p>Manage blog posts and content</p>
             </div>
+
+            <div class="feature-card" onclick="window.location.href='manage_testimonials.php'">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Testimonials</h3>
+                <p>Manage customer testimonials</p>
+            </div>
         </div>
     </div>
 

@@ -43,9 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $con->begin_transaction();
 
-            // Insert order
-            $stmt = $con->prepare("INSERT INTO orders (user_id, total_amount, shipping_address, phone) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("idss", $user_id, $cart_total, $_POST['address'], $_POST['phone']);
+            // Get user's phone from register table
+            $phone = $user['phone'];
+
+            // Insert order with correct fields including phone
+            $stmt = $con->prepare("INSERT INTO orders (user_id, total_amount, shipping_address, status, payment_method, payment_status, phone) VALUES (?, ?, ?, 'Pending', 'Cash on Delivery', 'Pending', ?)");
+            $stmt->bind_param("idss", $user_id, $cart_total, $_POST['address'], $phone);
             $stmt->execute();
             $order_id = $con->insert_id;
 

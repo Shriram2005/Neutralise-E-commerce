@@ -13,10 +13,10 @@ include('connection.php');
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT o.*, GROUP_CONCAT(CONCAT(p.name, ' (', oi.quantity, ')') SEPARATOR ', ') as products 
         FROM orders o 
-        LEFT JOIN order_items oi ON o.order_id = oi.order_id 
+        LEFT JOIN order_items oi ON o.id = oi.order_id 
         LEFT JOIN products p ON oi.product_id = p.id 
         WHERE o.user_id = ? 
-        GROUP BY o.order_id 
+        GROUP BY o.id 
         ORDER BY o.order_date DESC";
 
 $stmt = $con->prepare($sql);
@@ -57,13 +57,13 @@ $result = $stmt->get_result();
                     <div class="order-card">
                         <div class="order-header">
                             <div class="order-info">
-                                <h3>Order #<?php echo $order['order_id']; ?></h3>
+                                <h3>Order #<?php echo $order['id']; ?></h3>
                                 <span class="order-date">
                                     <?php echo date('F j, Y', strtotime($order['order_date'])); ?>
                                 </span>
                             </div>
-                            <div class="order-status <?php echo strtolower($order['order_status']); ?>">
-                                <?php echo $order['order_status']; ?>
+                            <div class="order-status <?php echo strtolower($order['status']); ?>">
+                                <?php echo $order['status']; ?>
                             </div>
                         </div>
                         <div class="order-details">
