@@ -529,6 +529,7 @@ $products = $con->query("SELECT * FROM products ORDER BY id DESC");
                     <label for="category">Category*</label>
                     <select id="category" name="category" required>
                         <option value="">Select Category</option>
+                        <option value="COMBO">COMBO</option>
                         <option value="BODY">BODY</option>
                         <option value="SKIN">SKIN</option>
                         <option value="FACE">FACE</option>

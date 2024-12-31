@@ -69,7 +69,7 @@ $category = isset($_GET['category']) ? $_GET['category'] : 'ALL';
 
 // Query to get products based on category
 if ($category == 'ALL') {
-    $sql = "SELECT * FROM products";
+    $sql = "SELECT * FROM products LIMIT 5";
 } else {
     $sql = "SELECT * FROM products WHERE category = '$category'";
 }
@@ -603,7 +603,7 @@ $con->close();
 
 // Fetch testimonials from the database
 // $sql = "SELECT * FROM testimonials ORDER BY date DESC";  // You can adjust the order as needed
-$sql = "SELECT * FROM testimonials";  // You can adjust the order as needed
+$sql = "SELECT * FROM `testimonials` LIMIT 3";  // You can adjust the order as needed
 
 $result = $con->query($sql);
 

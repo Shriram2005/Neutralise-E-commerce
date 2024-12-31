@@ -110,9 +110,7 @@ while ($row = $tags_result->fetch_assoc()) {
                             <div class="shop-product-info">
                                 <h3 class="shop-product-title">' . $product['name'] . '</h3>
                                 <p class="shop-product-price">₹' . number_format($product['price'], 2) . '</p>
-                                <div class="shop-product-tags">
-                                    ' . $tags_display . '
-                                </div>
+                                
                             </div>
                         </a>
                         <div class="shop-product-actions">
@@ -130,7 +128,9 @@ while ($row = $tags_result->fetch_assoc()) {
             ?>
         </div>
     </div>
-
+<!-- <div class="shop-product-tags">
+    ' . $tags_display . '
+</div> -->
     <!-- Filter Section -->
     <div class="shop-filter-section">
         <h2>Explore</h2>
@@ -178,6 +178,8 @@ while ($row = $tags_result->fetch_assoc()) {
     <span>Go to Cart</span>
     <span class="cart-count" id="floatingCartCount">0</span>
 </div>
+
+<?php include('footer.php');?>
 
 <style>
 .price-slider-container {

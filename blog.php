@@ -21,7 +21,7 @@
 
         <div class="blog-content">
             <main class="blog-posts">
-                <?php
+                <?php include('connection.php');
                 $where_clause = "1=1";
                 $params = [];
                 $types = "";
@@ -48,7 +48,7 @@
                 }
 
                 $query = "SELECT * FROM blogs WHERE $where_clause ORDER BY post_date DESC";
-                $stmt = $conn->prepare($query);
+                $stmt = $con->prepare($query);
 
                 if (!empty($params)) {
                     $stmt->bind_param($types, ...$params);
@@ -134,7 +134,7 @@
                     <ul class="category-list">
                         <?php
                         $categories_query = "SELECT DISTINCT category, COUNT(*) as count FROM blogs GROUP BY category ORDER BY category";
-                        $categories_result = $conn->query($categories_query);
+                        $categories_result = $con->query($categories_query);
                         while ($category = $categories_result->fetch_assoc()):
                             $active = isset($_GET['category']) && $_GET['category'] === $category['category'];
                         ?>
@@ -153,7 +153,7 @@
                     <div class="tag-cloud">
                         <?php
                         $tags_query = "SELECT tags FROM blogs";
-                        $tags_result = $conn->query($tags_query);
+                        $tags_result = $con->query($tags_query);
                         $tag_counts = [];
                         
                         while ($row = $tags_result->fetch_assoc()) {

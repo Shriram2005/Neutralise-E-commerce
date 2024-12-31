@@ -1502,3 +1502,352 @@ Parameters: Array
 [2024-12-27 18:49:31] Action: get, User ID: 0
 [2024-12-27 18:49:31] Action: count, User ID: 0
 [2024-12-27 19:20:25] Action: count, User ID: 0
+[2024-12-30 07:40:45] User not logged in
+[2024-12-30 07:48:42] User not logged in
+[2024-12-30 07:49:34] User not logged in
+[2024-12-30 07:49:48] User not logged in
+[2024-12-30 07:49:59] User not logged in
+[2024-12-30 07:50:42] User not logged in
+[2024-12-30 07:50:55] User not logged in
+[2024-12-30 07:55:17] Action: count, User ID: 0
+[2024-12-30 07:55:30] Action: count, User ID: 0
+[2024-12-30 07:55:51] Action: add, User ID: 0
+[2024-12-30 07:55:51] Adding to cart - Product ID: 1, Quantity: 1, Size: null
+[2024-12-30 07:55:51] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 1
+    [2] => 
+    [3] => 
+)
+
+[2024-12-30 07:55:51] Inserting new cart item
+[2024-12-30 07:55:51] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 1
+    [2] => 1
+    [3] => 
+)
+
+[2024-12-30 07:55:51] Cart operation successful
+[2024-12-30 07:55:51] Action: count, User ID: 0
+[2024-12-30 07:55:53] Action: get, User ID: 0
+[2024-12-30 07:55:53] Action: count, User ID: 0
+[2024-12-30 07:55:53] Action: get, User ID: 0
+[2024-12-30 07:55:58] Action: remove, User ID: 0
+[2024-12-30 07:55:59] Action: get, User ID: 0
+[2024-12-30 07:55:59] Action: count, User ID: 0
+[2024-12-30 07:56:01] Action: count, User ID: 0
+[2024-12-30 07:56:16] Action: add, User ID: 0
+[2024-12-30 07:56:16] Adding to cart - Product ID: 1, Quantity: 3, Size: null
+[2024-12-30 07:56:16] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 1
+    [2] => 
+    [3] => 
+)
+
+[2024-12-30 07:56:16] Inserting new cart item
+[2024-12-30 07:56:16] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 1
+    [2] => 3
+    [3] => 
+)
+
+[2024-12-30 07:56:16] Cart operation successful
+[2024-12-30 07:56:16] Action: count, User ID: 0
+[2024-12-30 07:56:18] Action: get, User ID: 0
+[2024-12-30 07:56:18] Action: count, User ID: 0
+[2024-12-30 07:56:18] Action: get, User ID: 0
+[2024-12-30 07:56:22] Action: update_quantity, User ID: 0
+[2024-12-30 07:56:22] Action: get, User ID: 0
+[2024-12-30 07:56:22] Action: count, User ID: 0
+[2024-12-30 07:56:23] Action: update_quantity, User ID: 0
+[2024-12-30 07:56:23] Action: get, User ID: 0
+[2024-12-30 07:56:23] Action: count, User ID: 0
+[2024-12-30 07:56:46] Action: count, User ID: 0
+[2024-12-30 07:56:46] Action: count, User ID: 0
+[2024-12-30 07:56:52] Action: count, User ID: 0
+[2024-12-30 07:56:52] Action: count, User ID: 0
+[2024-12-30 07:56:54] Action: count, User ID: 0
+[2024-12-30 07:56:54] Action: count, User ID: 0
+[2024-12-30 07:56:55] Action: count, User ID: 0
+[2024-12-30 07:56:55] Action: count, User ID: 0
+[2024-12-30 07:56:56] Action: count, User ID: 0
+[2024-12-30 07:56:56] Action: count, User ID: 0
+[2024-12-30 07:57:01] Action: add, User ID: 0
+[2024-12-30 07:57:01] Adding to cart - Product ID: 2, Quantity: 1, Size: null
+[2024-12-30 07:57:01] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 2
+    [2] => 
+    [3] => 
+)
+
+[2024-12-30 07:57:01] Inserting new cart item
+[2024-12-30 07:57:01] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 2
+    [2] => 1
+    [3] => 
+)
+
+[2024-12-30 07:57:01] Cart operation successful
+[2024-12-30 07:57:01] Action: count, User ID: 0
+[2024-12-30 07:57:02] Action: count, User ID: 0
+[2024-12-30 07:57:03] Action: add, User ID: 0
+[2024-12-30 07:57:03] Adding to cart - Product ID: 2, Quantity: 1, Size: null
+[2024-12-30 07:57:03] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 2
+    [2] => 
+    [3] => 
+)
+
+[2024-12-30 07:57:03] Updating quantity to 2 for cart_id: 0
+[2024-12-30 07:57:03] SQL Query: UPDATE cart SET quantity = ? WHERE cart_id = ?
+Parameters: Array
+(
+    [0] => 2
+    [1] => 0
+)
+
+[2024-12-30 07:57:03] Cart operation successful
+[2024-12-30 07:57:03] Action: count, User ID: 0
+[2024-12-30 07:57:04] Action: count, User ID: 0
+[2024-12-30 07:57:04] Action: count, User ID: 0
+[2024-12-30 08:02:48] Action: count, User ID: 0
+[2024-12-30 08:05:16] Action: count, User ID: 0
+[2024-12-30 08:05:35] Action: count, User ID: 0
+[2024-12-30 08:05:51] Action: count, User ID: 0
+[2024-12-30 08:09:41] Action: count, User ID: 0
+[2024-12-30 08:09:41] Action: count, User ID: 0
+[2024-12-30 08:09:46] Action: get, User ID: 0
+[2024-12-30 08:09:46] Action: count, User ID: 0
+[2024-12-30 08:09:46] Action: get, User ID: 0
+[2024-12-30 08:09:50] Action: count, User ID: 0
+[2024-12-30 08:09:50] Action: count, User ID: 0
+[2024-12-30 08:09:58] Action: count, User ID: 0
+[2024-12-30 08:09:58] Action: count, User ID: 0
+[2024-12-30 08:10:05] Action: count, User ID: 0
+[2024-12-30 08:10:05] Action: count, User ID: 0
+[2024-12-30 08:10:12] Action: count, User ID: 0
+[2024-12-30 08:10:27] Action: count, User ID: 0
+[2024-12-30 08:10:40] Action: count, User ID: 0
+[2024-12-30 08:10:55] Action: count, User ID: 0
+[2024-12-30 08:11:44] Action: count, User ID: 0
+[2024-12-30 08:11:58] Action: count, User ID: 0
+[2024-12-30 08:11:58] Action: count, User ID: 0
+[2024-12-30 08:12:05] Action: get, User ID: 0
+[2024-12-30 08:12:05] Action: count, User ID: 0
+[2024-12-30 08:12:05] Action: get, User ID: 0
+[2024-12-30 08:12:08] Action: update_quantity, User ID: 0
+[2024-12-30 08:12:08] Action: get, User ID: 0
+[2024-12-30 08:12:08] Action: count, User ID: 0
+[2024-12-30 08:12:12] Action: remove, User ID: 0
+[2024-12-30 08:12:12] Action: count, User ID: 0
+[2024-12-30 08:12:12] Action: get, User ID: 0
+[2024-12-30 08:12:14] Action: count, User ID: 0
+[2024-12-30 08:12:14] Action: count, User ID: 0
+[2024-12-30 08:14:06] Action: count, User ID: 0
+[2024-12-30 08:14:06] Action: count, User ID: 0
+[2024-12-30 08:14:23] Action: count, User ID: 0
+[2024-12-30 08:14:23] Action: count, User ID: 0
+[2024-12-30 08:14:25] Action: add, User ID: 0
+[2024-12-30 08:14:25] Adding to cart - Product ID: 4, Quantity: 1, Size: null
+[2024-12-30 08:14:25] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 4
+    [2] => 
+    [3] => 
+)
+
+[2024-12-30 08:14:25] Inserting new cart item
+[2024-12-30 08:14:25] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 4
+    [2] => 1
+    [3] => 
+)
+
+[2024-12-30 08:14:25] Cart operation successful
+[2024-12-30 08:14:25] Action: count, User ID: 0
+[2024-12-30 08:14:26] Action: count, User ID: 0
+[2024-12-30 08:14:28] Action: count, User ID: 0
+[2024-12-30 08:14:42] Action: count, User ID: 0
+[2024-12-30 08:14:42] Action: count, User ID: 0
+[2024-12-30 08:14:44] Action: count, User ID: 0
+[2024-12-30 08:15:21] Action: count, User ID: 0
+[2024-12-30 09:48:21] Action: count, User ID: 0
+[2024-12-31 06:55:20] User not logged in
+[2024-12-31 06:56:11] User not logged in
+[2024-12-31 06:56:11] User not logged in
+[2024-12-31 06:56:17] User not logged in
+[2024-12-31 06:59:44] User not logged in
+[2024-12-31 06:59:44] User not logged in
+[2024-12-31 07:17:24] Action: count, User ID: 0
+[2024-12-31 07:17:50] Action: count, User ID: 0
+[2024-12-31 07:17:50] Action: count, User ID: 0
+[2024-12-31 07:17:57] Action: count, User ID: 0
+[2024-12-31 07:20:58] Action: count, User ID: 0
+[2024-12-31 07:20:58] Action: count, User ID: 0
+[2024-12-31 07:21:00] Action: count, User ID: 0
+[2024-12-31 07:21:00] Action: count, User ID: 0
+[2024-12-31 07:21:23] Action: count, User ID: 0
+[2024-12-31 07:22:34] Action: count, User ID: 0
+[2024-12-31 07:30:21] Action: count, User ID: 0
+[2024-12-31 07:30:21] Action: count, User ID: 0
+[2024-12-31 07:30:28] Action: count, User ID: 0
+[2024-12-31 07:34:58] Action: count, User ID: 0
+[2024-12-31 07:35:03] Action: count, User ID: 0
+[2024-12-31 07:37:50] Action: count, User ID: 0
+[2024-12-31 07:38:01] Action: count, User ID: 0
+[2024-12-31 07:38:17] Action: count, User ID: 0
+[2024-12-31 07:38:46] Action: count, User ID: 0
+[2024-12-31 07:45:47] Action: count, User ID: 0
+[2024-12-31 07:45:47] Action: count, User ID: 0
+[2024-12-31 07:51:59] Action: count, User ID: 0
+[2024-12-31 08:03:19] Action: count, User ID: 0
+[2024-12-31 08:03:19] Action: count, User ID: 0
+[2024-12-31 08:03:25] Action: count, User ID: 0
+[2024-12-31 08:03:25] Action: count, User ID: 0
+[2024-12-31 08:14:59] Action: count, User ID: 0
+[2024-12-31 08:14:59] Action: count, User ID: 0
+[2024-12-31 08:15:12] Action: count, User ID: 0
+[2024-12-31 08:15:12] Action: count, User ID: 0
+[2024-12-31 08:15:40] Action: count, User ID: 0
+[2024-12-31 08:15:40] Action: count, User ID: 0
+[2024-12-31 08:16:19] Action: count, User ID: 0
+[2024-12-31 08:16:19] Action: count, User ID: 0
+[2024-12-31 08:23:03] Action: count, User ID: 0
+[2024-12-31 08:23:03] Action: count, User ID: 0
+[2024-12-31 08:31:23] Action: count, User ID: 0
+[2024-12-31 08:31:23] Action: count, User ID: 0
+[2024-12-31 08:31:26] Action: count, User ID: 0
+[2024-12-31 08:32:30] Action: count, User ID: 0
+[2024-12-31 08:34:53] Action: count, User ID: 0
+[2024-12-31 08:34:53] Action: count, User ID: 0
+[2024-12-31 08:34:59] Action: count, User ID: 0
+[2024-12-31 08:35:06] Action: count, User ID: 0
+[2024-12-31 08:35:06] Action: count, User ID: 0
+[2024-12-31 08:35:07] Action: count, User ID: 0
+[2024-12-31 08:36:33] Action: count, User ID: 0
+[2024-12-31 08:38:47] Action: count, User ID: 0
+[2024-12-31 08:39:23] Action: count, User ID: 0
+[2024-12-31 08:40:44] Action: count, User ID: 0
+[2024-12-31 08:41:06] Action: count, User ID: 0
+[2024-12-31 08:41:06] Action: count, User ID: 0
+[2024-12-31 08:44:00] Action: count, User ID: 0
+[2024-12-31 08:44:01] Action: count, User ID: 0
+[2024-12-31 08:44:28] Action: count, User ID: 0
+[2024-12-31 08:44:28] Action: count, User ID: 0
+[2024-12-31 08:44:30] Action: count, User ID: 0
+[2024-12-31 08:44:30] Action: count, User ID: 0
+[2024-12-31 08:44:32] Action: count, User ID: 0
+[2024-12-31 08:44:32] Action: count, User ID: 0
+[2024-12-31 08:44:36] Action: count, User ID: 0
+[2024-12-31 08:44:47] Action: count, User ID: 0
+[2024-12-31 08:44:52] Action: count, User ID: 0
+[2024-12-31 09:15:27] Action: count, User ID: 0
+[2024-12-31 09:20:54] Action: count, User ID: 0
+[2024-12-31 09:20:54] Action: count, User ID: 0
+[2024-12-31 09:20:57] Action: count, User ID: 0
+[2024-12-31 09:21:59] Action: count, User ID: 0
+[2024-12-31 09:22:16] Action: count, User ID: 0
+[2024-12-31 09:22:16] Action: count, User ID: 0
+[2024-12-31 09:27:41] Action: count, User ID: 0
+[2024-12-31 09:27:41] Action: count, User ID: 0
+[2024-12-31 09:41:48] Action: count, User ID: 0
+[2024-12-31 09:41:48] Action: count, User ID: 0
+[2024-12-31 11:01:28] Action: count, User ID: 0
+[2024-12-31 11:01:28] Action: count, User ID: 0
+[2024-12-31 11:05:35] Action: count, User ID: 0
+[2024-12-31 11:05:35] Action: count, User ID: 0
+[2024-12-31 11:11:52] Action: count, User ID: 0
+[2024-12-31 11:11:53] Action: count, User ID: 0
+[2024-12-31 12:13:21] Action: count, User ID: 0
+[2024-12-31 12:13:21] Action: count, User ID: 0
+[2024-12-31 12:13:38] Action: count, User ID: 0
+[2024-12-31 12:13:41] Action: count, User ID: 0
+[2024-12-31 12:13:41] Action: count, User ID: 0
+[2024-12-31 12:14:02] Action: count, User ID: 0
+[2024-12-31 12:14:02] Action: count, User ID: 0
+[2024-12-31 12:14:08] Action: count, User ID: 0
+[2024-12-31 12:14:08] Action: count, User ID: 0
+[2024-12-31 12:25:01] Action: count, User ID: 0
+[2024-12-31 12:25:01] Action: count, User ID: 0
+[2024-12-31 12:25:07] Action: count, User ID: 0
+[2024-12-31 12:51:07] Action: count, User ID: 0
+[2024-12-31 12:51:16] Action: count, User ID: 0
+[2024-12-31 12:51:16] Action: count, User ID: 0
+[2024-12-31 12:51:19] Action: count, User ID: 0
+[2024-12-31 12:55:24] Action: count, User ID: 0
+[2024-12-31 12:55:46] Action: count, User ID: 0
+[2024-12-31 12:59:37] Action: count, User ID: 0
+[2024-12-31 12:59:37] Action: count, User ID: 0
+[2024-12-31 12:59:47] Action: count, User ID: 0
+[2024-12-31 12:59:49] Action: add, User ID: 0
+[2024-12-31 12:59:49] Adding to cart - Product ID: 14, Quantity: 1, Size: null
+[2024-12-31 12:59:49] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 14
+    [2] => 
+    [3] => 
+)
+
+[2024-12-31 12:59:49] Inserting new cart item
+[2024-12-31 12:59:49] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 14
+    [2] => 1
+    [3] => 
+)
+
+[2024-12-31 12:59:51] Action: get, User ID: 0
+[2024-12-31 12:59:51] Action: count, User ID: 0
+[2024-12-31 12:59:51] Action: get, User ID: 0
+[2024-12-31 12:59:58] Action: remove, User ID: 0
+[2024-12-31 12:59:58] Action: get, User ID: 0
+[2024-12-31 12:59:58] Action: count, User ID: 0
+[2024-12-31 13:00:01] Action: count, User ID: 0
+[2024-12-31 13:00:08] Action: count, User ID: 0
+[2024-12-31 13:00:08] Action: count, User ID: 0
+[2024-12-31 18:09:04] Action: count, User ID: 0
+[2024-12-31 18:10:54] Action: count, User ID: 0
+[2024-12-31 18:11:11] Action: count, User ID: 0
+[2024-12-31 18:11:16] Action: count, User ID: 0
+[2024-12-31 18:11:29] Action: count, User ID: 0
+[2024-12-31 18:11:48] Action: count, User ID: 0
+[2024-12-31 18:12:05] Action: count, User ID: 0
+[2024-12-31 18:12:05] Action: count, User ID: 0
+[2024-12-31 18:12:14] Action: count, User ID: 0
+[2024-12-31 18:12:43] Action: count, User ID: 0
+[2024-12-31 18:12:43] Action: count, User ID: 0
+[2024-12-31 18:12:58] Action: count, User ID: 0
+[2024-12-31 18:13:33] Action: count, User ID: 0
+[2024-12-31 18:13:38] Action: count, User ID: 0
+[2024-12-31 18:14:19] Action: count, User ID: 0
+[2024-12-31 18:16:43] Action: count, User ID: 0
+[2024-12-31 18:17:08] Action: count, User ID: 0

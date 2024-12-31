@@ -26,7 +26,7 @@
 
 // Fetch testimonials from the database
 // $sql = "SELECT * FROM testimonials ORDER BY date DESC";  // You can adjust the order as needed
-$sql = "SELECT * FROM testimonials LIMIT 6";  // You can adjust the order as needed
+$sql = "SELECT * FROM `testimonials` LIMIT 6";  // You can adjust the order as needed
 
 $result = $con->query($sql);
 
