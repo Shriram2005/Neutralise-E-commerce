@@ -47,7 +47,7 @@
                     $types .= "sss";
                 }
 
-                $query = "SELECT * FROM blogs WHERE $where_clause ORDER BY post_date DESC";
+                $query = "SELECT * FROM blogs WHERE $where_clause ORDER BY post_date DESC LIMIT 5";
                 $stmt = $con->prepare($query);
 
                 if (!empty($params)) {
