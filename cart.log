@@ -1851,3 +1851,97 @@ Parameters: Array
 [2024-12-31 18:14:19] Action: count, User ID: 0
 [2024-12-31 18:16:43] Action: count, User ID: 0
 [2024-12-31 18:17:08] Action: count, User ID: 0
+[2024-12-31 18:45:43] User not logged in
+[2024-12-31 18:46:01] User not logged in
+[2024-12-31 18:46:01] User not logged in
+[2024-12-31 18:46:29] User not logged in
+[2024-12-31 18:46:56] User not logged in
+[2024-12-31 18:46:56] User not logged in
+[2024-12-31 18:47:31] Action: count, User ID: 0
+[2024-12-31 18:48:29] Action: count, User ID: 0
+[2024-12-31 18:48:29] Action: count, User ID: 0
+[2024-12-31 18:48:31] Action: count, User ID: 0
+[2024-12-31 18:48:40] Action: count, User ID: 0
+[2024-12-31 18:48:46] Action: count, User ID: 0
+[2024-12-31 18:48:46] Action: count, User ID: 0
+[2024-12-31 18:48:48] Action: get, User ID: 0
+[2024-12-31 18:48:48] Action: count, User ID: 0
+[2024-12-31 18:48:48] Action: get, User ID: 0
+[2025-01-03 15:48:26] User not logged in
+[2025-01-03 15:48:51] User not logged in
+[2025-01-03 15:49:11] User not logged in
+[2025-01-03 15:49:11] User not logged in
+[2025-01-03 15:49:37] User not logged in
+[2025-01-03 15:54:44] User not logged in
+[2025-01-03 15:58:24] User not logged in
+[2025-01-03 15:58:24] User not logged in
+[2025-01-03 16:00:24] User not logged in
+[2025-01-03 16:00:24] User not logged in
+[2025-01-03 16:00:34] Action: count, User ID: 0
+[2025-01-03 16:00:37] Action: count, User ID: 0
+[2025-01-03 16:01:10] Action: add, User ID: 0
+[2025-01-03 16:01:10] Adding to cart - Product ID: 2, Quantity: 3, Size: null
+[2025-01-03 16:01:10] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 0
+    [1] => 2
+    [2] => 
+    [3] => 
+)
+
+[2025-01-03 16:01:10] Inserting new cart item
+[2025-01-03 16:01:10] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 0
+    [1] => 2
+    [2] => 3
+    [3] => 
+)
+
+[2025-01-03 16:01:10] Cart operation successful
+[2025-01-03 16:01:10] Action: count, User ID: 0
+[2025-01-03 16:01:12] Action: get, User ID: 0
+[2025-01-03 16:01:12] Action: count, User ID: 0
+[2025-01-03 16:01:12] Action: get, User ID: 0
+[2025-01-03 16:01:14] Action: update_quantity, User ID: 0
+[2025-01-03 16:01:14] Action: count, User ID: 0
+[2025-01-03 16:01:14] Action: get, User ID: 0
+[2025-01-03 16:01:15] Action: update_quantity, User ID: 0
+[2025-01-03 16:01:15] Action: count, User ID: 0
+[2025-01-03 16:01:15] Action: get, User ID: 0
+[2025-01-03 16:01:16] Action: update_quantity, User ID: 0
+[2025-01-03 16:01:16] Action: count, User ID: 0
+[2025-01-03 16:01:16] Action: get, User ID: 0
+[2025-01-03 16:01:16] Action: update_quantity, User ID: 0
+[2025-01-03 16:01:16] Action: get, User ID: 0
+[2025-01-03 16:01:16] Action: count, User ID: 0
+[2025-01-03 16:01:17] Action: update_quantity, User ID: 0
+[2025-01-03 16:01:17] Action: get, User ID: 0
+[2025-01-03 16:01:17] Action: count, User ID: 0
+[2025-01-03 16:01:49] Action: get, User ID: 0
+[2025-01-03 16:01:49] Action: count, User ID: 0
+[2025-01-03 16:01:49] Action: get, User ID: 0
+[2025-01-03 16:02:15] Action: count, User ID: 0
+[2025-01-03 17:30:49] Action: count, User ID: 0
+[2025-01-03 18:07:09] User not logged in
+[2025-01-03 18:07:09] User not logged in
+[2025-01-03 18:22:43] User not logged in
+[2025-01-03 18:22:58] User not logged in
+[2025-01-03 18:31:44] User not logged in
+[2025-01-03 18:32:40] User not logged in
+[2025-01-03 18:37:02] User not logged in
+[2025-01-03 18:41:03] User not logged in
+[2025-01-03 18:42:39] User not logged in
+[2025-01-03 19:12:31] User not logged in
+[2025-01-03 19:12:39] User not logged in
+[2025-01-03 19:22:37] User not logged in
+[2025-01-03 19:22:53] User not logged in
+[2025-01-03 19:28:02] User not logged in
+[2025-01-03 19:28:27] User not logged in
+[2025-01-03 20:02:02] User not logged in
+[2025-01-03 20:02:33] User not logged in
+[2025-01-03 20:02:33] User not logged in
+[2025-01-03 20:02:43] User not logged in
+[2025-01-03 20:02:43] User not logged in

@@ -1,4 +1,5 @@
 <?php
+include 'check_admin.php';
 include 'connection.php';
 
 // Get statistics

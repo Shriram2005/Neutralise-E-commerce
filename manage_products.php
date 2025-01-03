@@ -1,12 +1,15 @@
 <?php
-// Start output buffering at the very beginning
-ob_start();
+session_start();
+include 'check_admin.php';
 include 'connection.php';
 
 // Initialize message variables
 $success_message = '';
 $error_message = '';
+?>
 
+<div class="admin-content">
+    <?php
 // Handle form submission for adding/editing product
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['action'])) {

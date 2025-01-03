@@ -239,7 +239,7 @@ CREATE TABLE `our_promise` (
 --
 
 INSERT INTO `our_promise` (`id`, `image`, `intro_text`, `list_items`, `closing_text`) VALUES
-(1, 'image2.png', 'At Neutralize Naturals, we promise:', '100% natural, chemical-free products, Faster and better relief compared to alternative medicines, Ongoing research and development for continuous improvement, Exceptional customer support and guidance', 'Once you experience our products, you\'ll understand why our customers keep coming back.');
+(1, 'image2.png', 'At Neutralise Naturals, we promise:', '100% natural, chemical-free products, Faster and better relief compared to alternative medicines, Ongoing research and development for continuous improvement, Exceptional customer support and guidance', 'Once you experience our products, you\'ll understand why our customers keep coming back.');
 
 -- --------------------------------------------------------
 

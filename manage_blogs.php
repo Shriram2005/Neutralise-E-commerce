@@ -1,4 +1,8 @@
 <?php
+session_start();
+include 'check_admin.php';
+// Start output buffering at the very beginning
+ob_start();
 include 'connection.php';
 
 // Handle blog deletion

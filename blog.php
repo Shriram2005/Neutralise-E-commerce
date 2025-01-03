@@ -64,7 +64,7 @@
                     <div class="blog-image">
                         <img src="contents/blog/<?php echo htmlspecialchars($blog['image']); ?>" alt="<?php echo htmlspecialchars($blog['title']); ?>">
                     </div>
-                    <div class="blog-content">
+        <div class="blog-content">
                         <div class="blog-meta">
                             <span class="blog-category">
                                 <i class="fas fa-folder"></i>
@@ -109,7 +109,7 @@
                     <i class="fas fa-newspaper"></i>
                     <h2>No Posts Found</h2>
                     <p>We couldn't find any blog posts matching your criteria. Try adjusting your search or browse our categories.</p>
-                </div>
+            </div>
                 <?php
                 endif;
                 $stmt->close();
@@ -126,8 +126,8 @@
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
-                    </form>
-                </div>
+            </form>
+        </div>
 
                 <div class="sidebar-widget categories-widget">
                     <h3>Categories</h3>

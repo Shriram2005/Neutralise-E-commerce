@@ -38,7 +38,7 @@
     <!-- top text  -------------------------------->
     <div class="top-text-area">
 
-        <h1>92% Success Rate with Neutralize Naturals over 35000+ Happy Customers</h1>
+        <h1>92% Success Rate with Neutralise Naturals over 35000+ Happy Customers</h1>
 
         <p class="t1">We offer a curated range of skincare products, developed with renowned Ayurvedic experts,
             sepcifically
