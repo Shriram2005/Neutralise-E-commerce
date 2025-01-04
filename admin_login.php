@@ -1,3 +1,41 @@
+<?php
+session_start();
+
+// Check if already logged in
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header("Location: admin_dashboard.php");
+    exit;
+}
+
+// Initialize error variable
+$error = '';
+
+// Process login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    // Check credentials (you should use more secure authentication in production)
+    if ($username === 'neutralise.in' && $password === 'Skin@88227') {
+        $_SESSION['admin_logged_in'] = true;
+        
+        // Debug logging
+        error_log("Admin login successful. Redirecting to dashboard...");
+        
+        header("Location: admin_dashboard.php");
+        exit;
+    } else {
+        $error = 'Invalid username or password';
+        
+        // Debug logging
+        error_log("Admin login failed. Username: $username");
+    }
+}
+
+// Debug logging
+error_log("Admin login page loaded");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,32 +46,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <?php
-    session_start();
-    
-    // Check if already logged in
-    if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-        header("Location: admin_dashboard.php");
-        exit;
-    }
-
-    $error = '';
-    
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
-        
-        // Check credentials
-        if ($username === 'neutralise.in' && $password === 'Skin@88227') {
-            $_SESSION['admin_logged_in'] = true;
-            header("Location: admin_dashboard.php");
-            exit;
-        } else {
-            $error = 'Invalid username or password';
-        }
-    }
-    ?>
-
     <div class="admin-login-container">
         <div class="login-box">
             <div class="login-header">

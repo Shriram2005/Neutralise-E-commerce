@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'check_admin.php';
 include 'connection.php';
 
