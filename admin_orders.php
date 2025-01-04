@@ -1,5 +1,7 @@
 <?php
 include 'connection.php';
+// Check if already logged in
+include 'check_admin.php';
 
 // Get all orders with customer details
 $query = "SELECT o.*, r.full_name as customer_name, r.email, r.phone 

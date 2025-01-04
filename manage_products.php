@@ -9,7 +9,7 @@ $error_message = '';
 ?>
 
 <div class="admin-content">
-    <?php
+<?php
 // Handle form submission for adding/editing product
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['action'])) {
