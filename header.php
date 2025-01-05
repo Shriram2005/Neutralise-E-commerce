@@ -2,6 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Clear any existing output buffers
+while (ob_get_level()) {
+    ob_end_clean();
+}
 ?>
 
 <style>
@@ -99,19 +104,31 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="./Calculator.php">Psoriasis Calculator</a>
     
             <!-- Login/Register Dropdown on Hover -->
-            <div class="user-dropdown">
-                <a href="" class="user-link" style="font-weight: bold;">
-                    <i class="fa-solid fa-user"></i>
+            <div class="user-menu">
+                <?php error_log("User menu check - Session: " . print_r($_SESSION, true)); ?>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="user-dropdown">
+                        <span class="user-info">
+                            <i class="fas fa-user"></i>
+                            <span class="username"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                        <div class="user-dropdown-content">
+                            <a href="profile.php">Profile</a>
+                            <a href="orders.php">My Orders</a>
+                            <a href="logout.php">Logout</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="Login-Register.php" class="login-btn">
+                        <i class="fas fa-user"></i>
+                        <span>Login</span>
+                    </a>
+                <?php endif; ?>
+                
+                <a href="cart.php" class="cart-icon" data-count="0">
+                    <i class="fas fa-shopping-cart"></i>
                 </a>
-                <div class="user-dropdown-content">
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <a href="orders.php">My Orders</a>
-                        <a href="./logout.php">Logout</a>
-                    <?php else: ?>
-                        <a href="./Login-Register.php">Login</a>
-                        <a href="./register.php">Register</a>
-                    <?php endif; ?>
-                </div>
             </div>
         </div>
     
@@ -122,38 +139,31 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <!-- Side menu / side navbar -->
     <div class="side-menu">
-        <img src="./contents/neutralise-logo.png" loading="lazy" alt="logo" width="170px" id="side-menu-img">
-        <a href="./index.php">Home</a>
-        <a href="./Appointment.php">Book an Appointment</a>
-        <a href="./shop.php">Shop</a>
-        <a href="./Calculator.php">Psoriasis Calculator</a>
+        <img src="contents/neutralise-logo.png" loading="lazy" alt="logo" width="170px" id="side-menu-img">
+        <a href="index.php">Home</a>
+        <a href="Appointment.php">Book an Appointment</a>
+        <a href="shop.php">Shop</a>
+        <a href="Calculator.php">Psoriasis Calculator</a>
 
         <div class="dropdown">
-            <a href="./about-us.php" class="dropdown-btn" onclick="toggleDropdown(event)">About Us  
+            <a href="about-us.php" class="dropdown-btn" onclick="toggleDropdown(event)">About Us  
                 <i class="fa-solid fa-chevron-down"></i>     
             </a>
             <div class="dropdown-content">
-                <a href="./blog.php">Blog</a>
-                <a href="./testimonials.php">Testimonials</a>
-                <a href="./contact.php">Contact Us</a>
+                <a href="blog.php">Blog</a>
+                <a href="testimonials.php">Testimonials</a>
+                <a href="contact.php">Contact Us</a>
             </div>
         </div>
         
-        <!-- Login/Register Dropdown on Hover -->
-        <div class="user-dropdown">
-            <a href="" class="user-link" style="font-weight: bold;">
-                <i class="fa-solid fa-user"></i>
-            </a>
-            <div class="user-dropdown-content">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="orders.php">My Orders</a>
-                    <a href="./logout.php">Logout</a>
-                <?php else: ?>
-                    <a href="./Login-Register.php">Login</a>
-                    <a href="./register.php">Register</a>
-                <?php endif; ?>
-            </div>
-        </div>
+        <!-- Login/Register links in side menu -->
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="orders.php">My Orders</a>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="Login-Register.php">Login</a>
+            <a href="register.php">Register</a>
+        <?php endif; ?>
     </div>
 
     <div class="black-effect" onclick="removeBlack()"></div>

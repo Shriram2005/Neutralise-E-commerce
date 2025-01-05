@@ -1945,3 +1945,155 @@ Parameters: Array
 [2025-01-03 20:02:33] User not logged in
 [2025-01-03 20:02:43] User not logged in
 [2025-01-03 20:02:43] User not logged in
+[2025-01-05 17:43:01] User not logged in
+[2025-01-05 17:44:31] User not logged in
+[2025-01-05 17:44:47] Action: count, User ID: 0
+[2025-01-05 18:26:01] User not logged in
+[2025-01-05 18:33:25] Action: count, User ID: 3
+[2025-01-05 18:36:59] User not logged in
+[2025-01-05 18:37:04] User not logged in
+[2025-01-05 18:38:54] User not logged in
+[2025-01-05 18:39:00] User not logged in
+[2025-01-05 18:39:39] User not logged in
+[2025-01-05 19:01:16] Action: count, User ID: 1
+[2025-01-05 19:01:36] Action: count, User ID: 1
+[2025-01-05 19:02:13] Action: count, User ID: 1
+[2025-01-05 19:06:25] Action: count, User ID: 1
+[2025-01-05 19:26:31] Action: count, User ID: 1
+[2025-01-05 19:26:34] Action: count, User ID: 1
+[2025-01-05 19:26:40] Action: count, User ID: 1
+[2025-01-05 19:27:06] Action: count, User ID: 1
+[2025-01-05 19:27:06] Action: count, User ID: 1
+[2025-01-05 19:27:08] Action: count, User ID: 1
+[2025-01-05 19:27:10] Action: add, User ID: 1
+[2025-01-05 19:27:10] Adding to cart - Product ID: 7, Quantity: 1, Size: null
+[2025-01-05 19:27:10] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 1
+    [1] => 7
+    [2] => 
+    [3] => 
+)
+
+[2025-01-05 19:27:10] Inserting new cart item
+[2025-01-05 19:27:10] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 1
+    [1] => 7
+    [2] => 1
+    [3] => 
+)
+
+[2025-01-05 19:27:10] Cart operation successful
+[2025-01-05 19:27:10] Action: count, User ID: 1
+[2025-01-05 19:27:13] Action: get, User ID: 1
+[2025-01-05 19:27:13] Action: count, User ID: 1
+[2025-01-05 19:27:13] Action: get, User ID: 1
+[2025-01-05 19:27:16] Action: remove, User ID: 1
+[2025-01-05 19:27:16] Action: get, User ID: 1
+[2025-01-05 19:27:16] Action: count, User ID: 1
+[2025-01-05 19:27:19] Action: count, User ID: 1
+[2025-01-05 19:40:26] Action: count, User ID: 1
+[2025-01-05 21:11:06] Action: count, User ID: 1
+[2025-01-05 21:11:09] User not logged in
+[2025-01-05 21:11:15] User not logged in
+[2025-01-05 21:11:15] User not logged in
+[2025-01-05 21:11:30] Action: count, User ID: 1
+[2025-01-05 21:11:37] Action: count, User ID: 1
+[2025-01-05 21:11:37] Action: count, User ID: 1
+[2025-01-05 21:11:40] Action: count, User ID: 1
+[2025-01-05 21:11:42] Action: count, User ID: 1
+[2025-01-05 21:11:42] Action: get, User ID: 1
+[2025-01-05 21:11:42] Action: get, User ID: 1
+[2025-01-05 21:11:43] Action: count, User ID: 1
+[2025-01-05 21:11:43] Action: get, User ID: 1
+[2025-01-05 21:11:43] Action: get, User ID: 1
+[2025-01-05 21:11:52] Action: get, User ID: 1
+[2025-01-05 21:11:52] Action: count, User ID: 1
+[2025-01-05 21:11:52] Action: get, User ID: 1
+[2025-01-05 21:11:56] User not logged in
+[2025-01-05 21:12:50] User not logged in
+[2025-01-05 21:12:58] User not logged in
+[2025-01-05 21:13:01] User not logged in
+[2025-01-05 21:13:03] User not logged in
+[2025-01-05 21:13:07] User not logged in
+[2025-01-05 21:13:34] User not logged in
+[2025-01-05 21:13:35] User not logged in
+[2025-01-05 21:13:35] User not logged in
+[2025-01-05 21:13:47] Action: count, User ID: 1
+[2025-01-05 21:14:00] Action: count, User ID: 1
+[2025-01-05 21:31:36] Action: count, User ID: 1
+[2025-01-05 21:39:40] Action: count, User ID: 1
+[2025-01-05 21:39:47] User not logged in
+[2025-01-05 21:45:21] User not logged in
+[2025-01-05 21:45:56] Action: count, User ID: 1
+[2025-01-05 21:46:04] Action: count, User ID: 1
+[2025-01-05 21:46:09] User not logged in
+[2025-01-05 21:46:13] Action: count, User ID: 1
+[2025-01-05 21:46:24] Action: count, User ID: 1
+[2025-01-05 21:46:25] Action: count, User ID: 1
+[2025-01-05 21:46:27] Action: count, User ID: 1
+[2025-01-05 21:46:30] Action: count, User ID: 1
+[2025-01-05 21:46:33] Action: count, User ID: 1
+[2025-01-05 21:46:33] Action: get, User ID: 1
+[2025-01-05 21:46:33] Action: get, User ID: 1
+[2025-01-05 21:46:36] Action: count, User ID: 1
+[2025-01-05 21:46:36] Action: get, User ID: 1
+[2025-01-05 21:46:36] Action: get, User ID: 1
+[2025-01-05 21:46:41] Action: count, User ID: 1
+[2025-01-05 21:52:42] Action: count, User ID: 1
+[2025-01-05 21:52:42] Action: count, User ID: 1
+[2025-01-05 21:52:44] Action: get, User ID: 1
+[2025-01-05 21:52:44] Action: count, User ID: 1
+[2025-01-05 21:52:44] Action: get, User ID: 1
+[2025-01-05 21:52:52] Action: count, User ID: 1
+[2025-01-05 21:57:50] Action: count, User ID: 1
+[2025-01-05 21:58:08] Action: count, User ID: 1
+[2025-01-05 21:58:12] Action: count, User ID: 1
+[2025-01-05 22:04:21] Action: count, User ID: 1
+[2025-01-05 22:04:21] Action: count, User ID: 1
+[2025-01-05 22:04:22] Action: count, User ID: 1
+[2025-01-05 22:04:24] Action: add, User ID: 1
+[2025-01-05 22:04:24] Adding to cart - Product ID: 13, Quantity: 1, Size: null
+[2025-01-05 22:04:24] Cart operation successful
+[2025-01-05 22:04:24] Action: count, User ID: 1
+[2025-01-05 22:04:26] Action: get, User ID: 1
+[2025-01-05 22:04:26] Action: count, User ID: 1
+[2025-01-05 22:04:26] Action: get, User ID: 1
+[2025-01-05 22:04:28] Action: remove, User ID: 1
+[2025-01-05 22:04:28] Action: get, User ID: 1
+[2025-01-05 22:04:28] Action: count, User ID: 1
+[2025-01-05 22:04:39] Action: count, User ID: 1
+[2025-01-05 22:04:42] Action: count, User ID: 1
+[2025-01-05 22:04:44] Action: add, User ID: 1
+[2025-01-05 22:04:44] Adding to cart - Product ID: 6, Quantity: 1, Size: null
+[2025-01-05 22:04:44] SQL Query: SELECT cart_id, quantity FROM cart WHERE user_id = ? AND product_id = ? AND (size_option = ? OR (size_option IS NULL AND ? IS NULL))
+Parameters: Array
+(
+    [0] => 1
+    [1] => 6
+    [2] => 
+    [3] => 
+)
+
+[2025-01-05 22:04:44] Inserting new cart item
+[2025-01-05 22:04:44] SQL Query: INSERT INTO cart (user_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)
+Parameters: Array
+(
+    [0] => 1
+    [1] => 6
+    [2] => 1
+    [3] => 
+)
+
+[2025-01-05 22:04:44] Cart operation successful
+[2025-01-05 22:04:44] Action: count, User ID: 1
+[2025-01-05 22:04:46] Action: count, User ID: 1
+[2025-01-05 22:04:46] Action: get, User ID: 1
+[2025-01-05 22:04:46] Action: get, User ID: 1
+[2025-01-05 22:04:47] Action: remove, User ID: 1
+[2025-01-05 22:04:47] Action: get, User ID: 1
+[2025-01-05 22:04:47] Action: count, User ID: 1
+[2025-01-05 22:04:48] Action: count, User ID: 1

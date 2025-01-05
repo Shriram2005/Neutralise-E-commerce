@@ -1,35 +1,52 @@
 <?php
+// Start output buffering at the very beginning
+ob_start();
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // If user is already logged in, redirect to home page
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
-    exit;
+    exit();
 }
 
-include('connection.php');
+require_once('connection.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
+    $email = mysqli_real_escape_string($con, $_POST['email']);
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM register WHERE email = ?";
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            header("Location: index.php");
-            exit;
-        } else {
-            $error = "Invalid password";
-        }
+    // Validate input
+    if (empty($email) || empty($password)) {
+        $error = "Please fill in all fields";
     } else {
-        $error = "Email not found";
+        $sql = "SELECT * FROM register WHERE email = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['full_name'];
+                error_log("Login successful - Session data: " . print_r($_SESSION, true));
+                
+                // Clean all output buffers
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                
+                header("Location: index.php");
+                exit();
+            } else {
+                $error = "Invalid password";
+            }
+        } else {
+            $error = "Email not found";
+        }
     }
 }
 ?>
@@ -40,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Neutralise Naturals</title>
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <?php include('header.php')?>
+    <?php include('header.php'); ?>
 
     <main class="login-container">
         <div class="login-box">
@@ -52,14 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             <?php if (isset($error)): ?>
                 <div class="error-message">
-                    <?php echo $error; ?>
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['registered']) && $_GET['registered'] == 1): ?>
+                <div class="success-message">
+                    Registration successful! Please login.
                 </div>
             <?php endif; ?>
 
             <form method="POST" class="login-form">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 </div>
 
                 <div class="form-group">
@@ -76,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </main>
 
-    <?php include('footer.php')?>
+    <?php include('footer.php'); ?>
 
 <style>
 .login-container {
@@ -186,6 +209,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     .form-group input {
         padding: 0.6rem;
     }
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 </style>
 

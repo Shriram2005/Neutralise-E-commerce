@@ -100,3 +100,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call this function when the DOM is loaded
     setupInfiniteScroll();
 });
+
+// Add this to your existing script.js file
+function handleAjaxError(xhr, status, error) {
+    if (xhr.status === 404) {
+        alert("The requested resource was not found.");
+    } else if (xhr.status === 500) {
+        alert("An internal server error occurred. Please try again later.");
+    } else {
+        alert("An error occurred: " + error);
+    }
+}
+
+// Update your AJAX calls to use this error handler
+$.ajax({
+    // ... your existing ajax settings ...
+    error: function(xhr, status, error) {
+        handleAjaxError(xhr, status, error);
+    }
+});
